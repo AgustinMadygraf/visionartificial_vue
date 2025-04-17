@@ -1,26 +1,58 @@
+<!-- filepath: App.vue -->
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app">
+    <header>
+      <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+          <span class="navbar-brand">Visión Artificial</span>
+        </div>
+      </nav>
+    </header>
+    
+    <main class="py-4">
+      <Home />
+    </main>
+    
+    <footer class="bg-dark text-light py-3 mt-5">
+      <div class="container text-center">
+        <p class="mb-0">Visión Artificial con Vue.js &copy; 2025</p>
+      </div>
+    </footer>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Home from './components/Home.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Home
   }
 }
 </script>
 
 <style>
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
+
+main {
+  flex: 1;
+}
+
+/* Si estás utilizando Bootstrap, puedes agregar la importación aquí o
+   incluirlo en el main.js o index.html */
 </style>
