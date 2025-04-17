@@ -28,7 +28,7 @@
     },
     computed: {
       streamUrl() {
-        const endpoint = this.streamType === 'original' ? 'video_original' : 'video_process';
+        const endpoint = this.streamType === 'original' ? 'video/original' : 'video/process';
         return `${this.apiBaseUrl}/${endpoint}?t=${new Date().getTime()}`;
       },
       altText() {

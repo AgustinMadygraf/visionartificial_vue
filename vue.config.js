@@ -7,11 +7,11 @@ const webpack = require('webpack');
 module.exports = {
   devServer: {
     proxy: {
-      '^/video_original': {
+      '^/video/original': {
         target: 'http://localhost:5000',
         changeOrigin: true
       },
-      '^/video_process': {
+      '^/video/process': {
         target: 'http://localhost:5000',
         changeOrigin: true
       }
