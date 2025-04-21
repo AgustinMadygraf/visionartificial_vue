@@ -9,6 +9,10 @@
   </template>
   
   <script>
+  import { useConfigStore } from '@/stores/configStore'
+  import { computed } from 'vue'
+  import { storeToRefs } from 'pinia'
+
   export default {
     name: 'VideoStream',
     props: {
@@ -26,22 +30,21 @@
         default: 'Video Feed Detenido'
       }
     },
-    computed: {
-      streamUrl() {
-        const endpoint = this.streamType === 'original' ? 'video/original' : 'video/process';
-        return `${this.apiBaseUrl}/${endpoint}?t=${new Date().getTime()}`;
-      },
-      altText() {
-        return this.isActive ? `Video ${this.streamType}` : this.placeholderText;
-      },
-      apiBaseUrl() {
-        return process.env.VUE_APP_API_URL || 'http://localhost:5000';
+    setup(props) {
+      const configStore = useConfigStore()
+      const { apiBaseUrl } = storeToRefs(configStore)
+      const streamUrl = computed(() => {
+        const endpoint = props.streamType === 'original' ? 'video/original' : 'video/process'
+        return `${apiBaseUrl.value}/${endpoint}?t=${new Date().getTime()}`
+      })
+      const altText = computed(() => props.isActive ? `Video ${props.streamType}` : props.placeholderText)
+      function handleStreamError(e) {
+        console.error('Error loading stream:', e)
       }
-    },
-    methods: {
-      handleStreamError(e) {
-        console.error('Error loading stream:', e);
-        this.$emit('stream-error', this.streamType);
+      return {
+        streamUrl,
+        altText,
+        handleStreamError
       }
     }
   }

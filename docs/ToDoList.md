@@ -236,6 +236,37 @@
 
 🎯 **Beneficio esperado:** Gestión consistente de errores de API con posibilidad de logging centralizado.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Tarea 3: Refactorización a Composition API
 
 📌 **Título:** Migración de Options API a Composition API
@@ -337,6 +368,39 @@
 
 🎯 **Beneficio esperado:** Abstracción de la gestión de estado de video independiente de la implementación subyacente.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Tarea 4: Separación de Responsabilidades en Componentes
 
 📌 **Título:** Refactorización de componentes según principio de responsabilidad única
@@ -435,6 +499,50 @@
 🔗 **Dependencias:** Ninguna específica
 
 🎯 **Beneficio esperado:** Mejor experiencia de usuario durante estados de carga, consistencia en la presentación.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Tarea 5: Implementación de Patrón Container/Presentational
 
@@ -537,6 +645,46 @@
 🔗 **Dependencias:** Subtareas 5.1, 5.2 y 5.3
 
 🎯 **Beneficio esperado:** Contratos claros entre componentes, mejorando la mantenibilidad y testabilidad.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Tarea 6: Implementación de Vue Router
 
@@ -644,6 +792,51 @@
 
 🎯 **Beneficio esperado:** Navegación intuitiva entre vistas para mejorar la experiencia de usuario.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Tarea 7: Mejora en el Manejo de Errores
 
 📌 **Título:** Implementación de sistema global de manejo de errores
@@ -741,6 +934,47 @@
 🔗 **Dependencias:** Subtareas 7.1 y 7.2
 
 🎯 **Beneficio esperado:** Capacidad para registrar y analizar errores para diagnóstico y mejora continua.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Tarea 8: Reorganización de Estructura del Proyecto
 
@@ -842,6 +1076,49 @@
 🔗 **Dependencias:** Subtarea 8.1
 
 🎯 **Beneficio esperado:** Gestión centralizada y clara de configuraciones, facilitando cambios globales.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Tarea 9: Mejora de Calidad de Código
 
@@ -945,6 +1222,51 @@
 🔗 **Dependencias:** Ninguna específica
 
 🎯 **Beneficio esperado:** Código más limpio y mejor rendimiento al eliminar dependencias innecesarias.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Tarea 10: Gestión Mejorada de Configuración
 
