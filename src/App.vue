@@ -10,7 +10,7 @@
     </header>
     
     <main class="py-4">
-      <Home />
+      <HomePage />
     </main>
     
     <footer class="bg-dark text-light py-3 mt-5">
@@ -22,12 +22,12 @@
 </template>
 
 <script>
-import Home from './components/Home.vue';
+import HomePage from './components/HomePage.vue';
 
 export default {
   name: 'App',
   components: {
-    Home
+    HomePage
   }
 }
 </script>

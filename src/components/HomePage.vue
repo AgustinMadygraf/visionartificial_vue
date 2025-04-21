@@ -1,12 +1,11 @@
 <!--
-Path: src/components/Home.vue
+Path: src/components/HomePage.vue
 -->
 
 <template>
   <div class="home">
     <div class="container">
       <h1 class="text-center my-4">Visión Artificial</h1>
-      
       <div class="row">
         <div class="col-md-6">
           <h2>Video Original</h2>
@@ -22,7 +21,6 @@ Path: src/components/Home.vue
             @stream-error="handleStreamError"
           />
         </div>
-        
         <div class="col-md-6">
           <h2>Video Procesado</h2>
           <VideoControls 
@@ -42,48 +40,41 @@ Path: src/components/Home.vue
   </div>
 </template>
 
-<script>
-import VideoStream from '@/components/VideoStream.vue';
-import VideoControls from '@/components/VideoControls.vue';
+<script setup>
+/* global defineOptions */
+import { ref } from 'vue'
+import VideoStream from '@/components/VideoStream.vue'
+import VideoControls from '@/components/VideoControls.vue'
 
-export default {
-  name: 'HomePage',
-  components: {
-    VideoStream,
-    VideoControls
-  },
-  data() {
-    return {
-      originalActive: false,
-      processedActive: false
-    }
-  },
-  methods: {
-    startOriginal() {
-      this.originalActive = true;
-    },
-    stopOriginal() {
-      this.originalActive = false;
-    },
-    startProcessed() {
-      this.processedActive = true;
-    },
-    stopProcessed() {
-      this.processedActive = false;
-    },
-    handleStreamError(streamType) {
-      console.error(`Stream error on ${streamType}`);
-      if (streamType === 'original') {
-        this.originalActive = false;
-      } else {
-        this.processedActive = false;
-      }
-      this.$notify({
-        type: 'error',
-        title: 'Error de Conexión',
-        text: `No se pudo conectar al stream de video ${streamType}. Verifique que el servidor esté funcionando.`
-      });
-    }
+defineOptions({ name: 'HomePage' })
+
+const originalActive = ref(false)
+const processedActive = ref(false)
+
+function startOriginal() {
+  originalActive.value = true
+}
+function stopOriginal() {
+  originalActive.value = false
+}
+function startProcessed() {
+  processedActive.value = true
+}
+function stopProcessed() {
+  processedActive.value = false
+}
+function handleStreamError(streamType) {
+  console.error(`Stream error on ${streamType}`)
+  if (streamType === 'original') {
+    originalActive.value = false
+  } else {
+    processedActive.value = false
   }
+  // Si usas un sistema de notificaciones global, descomenta la siguiente línea:
+  // $notify({
+  //   type: 'error',
+  //   title: 'Error de Conexión',
+  //   text: `No se pudo conectar al stream de video ${streamType}. Verifique que el servidor esté funcionando.`
+  // })
 }
 </script>
