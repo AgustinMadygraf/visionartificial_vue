@@ -13,6 +13,7 @@ Path: src/components/HomePage.vue
             :is-active="originalActive" 
             @start="startOriginal" 
             @stop="stopOriginal"
+            stream-type="original"
           />
           <VideoStream 
             stream-type="original" 
@@ -27,6 +28,7 @@ Path: src/components/HomePage.vue
             :is-active="processedActive" 
             @start="startProcessed" 
             @stop="stopProcessed"
+            stream-type="processed"
           />
           <VideoStream 
             stream-type="processed" 
@@ -42,6 +44,7 @@ Path: src/components/HomePage.vue
 
 <script setup>
 /* global defineOptions */
+import { onMounted } from 'vue'
 import VideoStream from '@/components/VideoStream.vue'
 import VideoControls from '@/components/VideoControls.vue'
 import { useVideoState } from '@/composables/useVideoState'
@@ -59,4 +62,9 @@ const {
 } = useVideoState()
 
 const { handleStreamError } = useErrorHandling()
+
+// Auto-start original video stream when component mounts
+onMounted(() => {
+  startOriginal()
+})
 </script>

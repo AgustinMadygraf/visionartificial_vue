@@ -3,18 +3,38 @@ import { storeToRefs } from 'pinia'
 
 export function useVideoState() {
   const videoStore = useVideoStore()
-  const { originalActive, processedActive } = storeToRefs(videoStore)
+  const { 
+    originalActive, 
+    processedActive 
+  } = storeToRefs(videoStore)
+  const { 
+    isOriginalLoading, 
+    isProcessedLoading 
+  } = videoStore
 
-  function startOriginal() {
-    videoStore.startOriginal()
+  async function startOriginal() {
+    try {
+      videoStore.startOriginal()
+      // We'll mark loading as complete after a short delay to ensure stream has started
+      await new Promise(resolve => setTimeout(resolve, 500))
+      videoStore.setLoadingComplete('original')
+    } catch (error) {
+      videoStore.setError('original', error)
+    }
   }
   
   function stopOriginal() {
     videoStore.stopOriginal()
   }
   
-  function startProcessed() {
-    videoStore.startProcessed()
+  async function startProcessed() {
+    try {
+      videoStore.startProcessed()
+      await new Promise(resolve => setTimeout(resolve, 500))
+      videoStore.setLoadingComplete('processed')
+    } catch (error) {
+      videoStore.setError('processed', error)
+    }
   }
   
   function stopProcessed() {
@@ -24,6 +44,8 @@ export function useVideoState() {
   return {
     originalActive,
     processedActive,
+    isOriginalLoading,
+    isProcessedLoading,
     startOriginal,
     stopOriginal,
     startProcessed,

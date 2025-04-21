@@ -9,35 +9,65 @@ export const useVideoStore = defineStore('video', {
   state: () => ({
     originalActive: false,
     processedActive: false,
-    error: null
+    streamStates: {
+      original: {
+        loading: false,
+        error: null
+      },
+      processed: {
+        loading: false,
+        error: null
+      }
+    }
   }),
+  
   getters: {
     originalStreamUrl: () => videoService.getVideoStreamUrl('original'),
-    processedStreamUrl: () => videoService.getVideoStreamUrl('processed')
+    processedStreamUrl: () => videoService.getVideoStreamUrl('processed'),
+    isOriginalLoading: state => state.streamStates.original.loading,
+    isProcessedLoading: state => state.streamStates.processed.loading
   },
+  
   actions: {
     startOriginal() {
-      this.originalActive = true
+      this.originalActive = true;
+      this.streamStates.original.loading = true;
+      this.streamStates.original.error = null;
     },
+    
     stopOriginal() {
-      this.originalActive = false
+      this.originalActive = false;
+      this.streamStates.original.loading = false;
     },
+    
     startProcessed() {
-      this.processedActive = true
+      this.processedActive = true;
+      this.streamStates.processed.loading = true;
+      this.streamStates.processed.error = null;
     },
+    
     stopProcessed() {
-      this.processedActive = false
+      this.processedActive = false;
+      this.streamStates.processed.loading = false;
     },
+    
     setError(streamType, errorMsg) {
-      this.error = { streamType, errorMsg }
+      this.streamStates[streamType].error = errorMsg;
+      this.streamStates[streamType].loading = false;
+      
       if (streamType === 'original') {
-        this.originalActive = false
+        this.originalActive = false;
       } else {
-        this.processedActive = false
+        this.processedActive = false;
       }
     },
-    clearError() {
-      this.error = null
+    
+    clearError(streamType) {
+      this.streamStates[streamType].error = null;
+    },
+    
+    setLoadingComplete(streamType) {
+      this.streamStates[streamType].loading = false;
     }
   }
 })
