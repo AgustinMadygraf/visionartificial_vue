@@ -9,10 +9,9 @@
 </template>
 
 <script setup>
-/* global defineProps, defineEmits */
-import { computed } from 'vue'
-import { useConfigStore } from '@/stores/configStore'
-import { storeToRefs } from 'pinia'
+/* global defineProps */
+import { watch } from 'vue'
+import { useVideoStream } from '@/composables/useVideoStream'
 
 const props = defineProps({
   streamType: {
@@ -30,21 +29,22 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['stream-error'])
+const {
+  streamUrl,
+  altText,
+  startStream,
+  stopStream,
+  onStreamError
+} = useVideoStream(props.streamType)
 
-const configStore = useConfigStore()
-const { apiBaseUrl } = storeToRefs(configStore)
-
-const streamUrl = computed(() => {
-  const endpoint = props.streamType === 'original' ? 'video/original' : 'video/process'
-  return `${apiBaseUrl.value}/${endpoint}?t=${new Date().getTime()}`
-})
-
-const altText = computed(() => props.isActive ? `Video ${props.streamType}` : props.placeholderText)
-
-function onStreamError() {
-  emit('stream-error', props.streamType)
-}
+// Sincronizar el estado isActive del composable con la prop
+watch(() => props.isActive, (newValue) => {
+  if (newValue) {
+    startStream()
+  } else {
+    stopStream()
+  }
+}, { immediate: true })
 </script>
 
 <style scoped>

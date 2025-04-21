@@ -44,28 +44,19 @@ Path: src/components/HomePage.vue
 /* global defineOptions */
 import VideoStream from '@/components/VideoStream.vue'
 import VideoControls from '@/components/VideoControls.vue'
-import { useVideoStore } from '@/stores/videoStore';
-import { storeToRefs } from 'pinia';
+import { useVideoState } from '@/composables/useVideoState'
+import { useErrorHandling } from '@/composables/useErrorHandling'
 
 defineOptions({ name: 'HomePage' })
 
-const videoStore = useVideoStore();
-const { originalActive, processedActive } = storeToRefs(videoStore);
+const { 
+  originalActive, 
+  processedActive, 
+  startOriginal, 
+  stopOriginal, 
+  startProcessed, 
+  stopProcessed 
+} = useVideoState()
 
-function startOriginal() {
-  videoStore.startOriginal();
-}
-function stopOriginal() {
-  videoStore.stopOriginal();
-}
-function startProcessed() {
-  videoStore.startProcessed();
-}
-function stopProcessed() {
-  videoStore.stopProcessed();
-}
-function handleStreamError(streamType) {
-  console.error(`Stream error on ${streamType}`);
-  videoStore.setError(streamType, `No se pudo conectar al stream de video ${streamType}. Verifique que el servidor esté funcionando.`);
-}
+const { handleStreamError } = useErrorHandling()
 </script>

@@ -1,20 +1,24 @@
-import { ref } from 'vue'
+import { useVideoStore } from '@/stores/videoStore'
+import { storeToRefs } from 'pinia'
 
 export function useVideoState() {
-  const originalActive = ref(false)
-  const processedActive = ref(false)
+  const videoStore = useVideoStore()
+  const { originalActive, processedActive } = storeToRefs(videoStore)
 
   function startOriginal() {
-    originalActive.value = true
+    videoStore.startOriginal()
   }
+  
   function stopOriginal() {
-    originalActive.value = false
+    videoStore.stopOriginal()
   }
+  
   function startProcessed() {
-    processedActive.value = true
+    videoStore.startProcessed()
   }
+  
   function stopProcessed() {
-    processedActive.value = false
+    videoStore.stopProcessed()
   }
 
   return {
