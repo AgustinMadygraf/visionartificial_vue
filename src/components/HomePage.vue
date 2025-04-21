@@ -42,39 +42,30 @@ Path: src/components/HomePage.vue
 
 <script setup>
 /* global defineOptions */
-import { ref } from 'vue'
 import VideoStream from '@/components/VideoStream.vue'
 import VideoControls from '@/components/VideoControls.vue'
+import { useVideoStore } from '@/stores/videoStore';
+import { storeToRefs } from 'pinia';
 
 defineOptions({ name: 'HomePage' })
 
-const originalActive = ref(false)
-const processedActive = ref(false)
+const videoStore = useVideoStore();
+const { originalActive, processedActive } = storeToRefs(videoStore);
 
 function startOriginal() {
-  originalActive.value = true
+  videoStore.startOriginal();
 }
 function stopOriginal() {
-  originalActive.value = false
+  videoStore.stopOriginal();
 }
 function startProcessed() {
-  processedActive.value = true
+  videoStore.startProcessed();
 }
 function stopProcessed() {
-  processedActive.value = false
+  videoStore.stopProcessed();
 }
 function handleStreamError(streamType) {
-  console.error(`Stream error on ${streamType}`)
-  if (streamType === 'original') {
-    originalActive.value = false
-  } else {
-    processedActive.value = false
-  }
-  // Si usas un sistema de notificaciones global, descomenta la siguiente línea:
-  // $notify({
-  //   type: 'error',
-  //   title: 'Error de Conexión',
-  //   text: `No se pudo conectar al stream de video ${streamType}. Verifique que el servidor esté funcionando.`
-  // })
+  console.error(`Stream error on ${streamType}`);
+  videoStore.setError(streamType, `No se pudo conectar al stream de video ${streamType}. Verifique que el servidor esté funcionando.`);
 }
 </script>

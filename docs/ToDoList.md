@@ -1,381 +1,74 @@
-## Tarea 3: Refactorización a Composition API
+## 📌 Tarea 2: Estandarizar el uso de Composition API
 
-📌 **Título:** Migración de Options API a Composition API
+**📝 Descripción:** Actualmente, el proyecto mezcla Options API (en App.vue) y Composition API (en otros componentes), lo que genera inconsistencia en el estilo de código y dificulta el mantenimiento. Esta tarea busca estandarizar el uso de Composition API en todos los componentes para mejorar la coherencia, facilitar el mantenimiento y aprovechar las ventajas de la Composition API.
 
-📝 **Descripción:** Refactorizar los componentes actuales para que utilicen la Composition API de Vue 3 en lugar de la Options API, mejorando la organización del código, reusabilidad y facilitando la implementación de composables.
+**🎯 Beneficio esperado:** 
+- Coherencia en el estilo de código en toda la aplicación
+- Facilita la comprensión y mantenimiento del código
+- Permite aprovechar mejor las características de la Composition API
+- Mejora la reutilización de lógica entre componentes
 
-🏗️ **Archivos a modificar o crear:**
-- Modificar todos los componentes Vue existentes
-- Crear directorio `src/composables`
+### Subtarea 2.1: Migrar App.vue a Composition API con script setup
 
-🔗 **Dependencias:** Idealmente después de Tareas 1 y 2
+**📌 Título:** Migrar App.vue a Composition API con script setup
 
-🎯 **Beneficio esperado:** Mejor organización del código, mayor reusabilidad de lógica, facilidad para testing aislado.
+**📝 Descripción:** Convertir el componente App.vue que actualmente usa Options API a Composition API con sintaxis `<script setup>`, manteniendo la misma funcionalidad pero aprovechando las ventajas de la nueva sintaxis.
 
-### Subtareas:
+**🏗️ Archivos a modificar:**
+- App.vue
 
-#### 3.1 Crear composables para lógica común
+**📂 Archivos de referencia:**
+- HomePage.vue (como ejemplo de componente con script setup)
 
-📌 **Título:** Desarrollo de composables para lógica reutilizable
+**🔗 Dependencias:**
+- Ninguna, puede realizarse independientemente de otras tareas
 
-📝 **Descripción:** Extraer lógica común a múltiples componentes en funciones composables dedicadas siguiendo los principios de la Composition API.
+**🎯 Beneficio esperado:** 
+- Código más conciso y declarativo
+- Consistencia con el resto de componentes
+- Facilita futuras refactorizaciones
 
-🏗️ **Archivos a modificar o crear:**
-- Crear `src/composables/useVideoStream.js`
-- Crear `src/composables/useErrorHandling.js`
+### Subtarea 2.2: Verificar importaciones automáticas en todos los componentes
 
-📂 **Archivos de referencia:**
-- VideoStream.vue
-- Home.vue
+**📌 Título:** Verificar y estandarizar importaciones en componentes
 
-🔗 **Dependencias:** Ninguna
+**📝 Descripción:** Revisar todos los componentes para asegurar que utilizan correctamente las importaciones automáticas de la Composition API y que no hay mezcla de estilos o imports redundantes. Esto incluye asegurar que todos los componentes utilizan los comentarios globales apropiados para definir props y emits.
 
-🎯 **Beneficio esperado:** Encapsulación de lógica reutilizable, facilitando testing y mantenimiento.
-
-#### 3.2 Refactorización de Home.vue a Composition API
-
-📌 **Título:** Migrar Home.vue a Composition API
-
-📝 **Descripción:** Refactorizar el componente Home para utilizar la sintaxis de Composition API (`setup()` o `<script setup>`), manteniendo la misma funcionalidad pero con mejor organización interna.
-
-🏗️ **Archivos a modificar o crear:**
-- Modificar Home.vue
-
-📂 **Archivos de referencia:**
-- `src/composables/useVideoStream.js`
-- `src/stores/videoStore.js`
-
-🔗 **Dependencias:** Subtarea 3.1, idealmente después de Tarea 1
-
-🎯 **Beneficio esperado:** Componente más legible, mejor organizado y más fácil de mantener.
-
-#### 3.3 Refactorización de VideoStream.vue a Composition API
-
-📌 **Título:** Migrar VideoStream.vue a Composition API
-
-📝 **Descripción:** Refactorizar el componente VideoStream para utilizar la sintaxis de Composition API, extrayendo su lógica a composables reutilizables donde sea posible.
-
-🏗️ **Archivos a modificar o crear:**
-- Modificar VideoStream.vue
-
-📂 **Archivos de referencia:**
-- `src/composables/useVideoStream.js`
-- `src/stores/configStore.js` (si se ha implementado)
-
-🔗 **Dependencias:** Subtarea 3.1, idealmente después de Tareas 1 y 2
-
-🎯 **Beneficio esperado:** Mejor organización del componente, separación de responsabilidades.
-
-#### 3.4 Refactorización de VideoControls.vue a Composition API
-
-📌 **Título:** Migrar VideoControls.vue a Composition API
-
-📝 **Descripción:** Refactorizar el componente VideoControls para utilizar la sintaxis de Composition API, mejorando su organización interna.
-
-🏗️ **Archivos a modificar o crear:**
-- Modificar VideoControls.vue
-
-📂 **Archivos de referencia:**
-- `src/stores/videoStore.js` (si se ha implementado)
-
-🔗 **Dependencias:** Subtarea 3.1, idealmente después de Tarea 1
-
-🎯 **Beneficio esperado:** Mejor organización y cohesión del componente.
-
-#### 3.5 Crear composable para gestión de estado de video
-
-📌 **Título:** Implementar composable de gestión de estado de video
-
-📝 **Descripción:** Desarrollar un composable dedicado que encapsule la lógica de gestión de estado de video, ya sea utilizando Pinia o estado local reactivo.
-
-🏗️ **Archivos a modificar o crear:**
-- Crear `src/composables/useVideoState.js`
-
-📂 **Archivos de referencia:**
-- `src/stores/videoStore.js` (si existe)
-- Home.vue
-
-🔗 **Dependencias:** Subtarea 3.1
-
-🎯 **Beneficio esperado:** Abstracción de la gestión de estado de video independiente de la implementación subyacente.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Tarea 4: Separación de Responsabilidades en Componentes
-
-📌 **Título:** Refactorización de componentes según principio de responsabilidad única
-
-📝 **Descripción:** Reorganizar los componentes actuales para que cada uno tenga una única responsabilidad bien definida, mejorando la cohesión del código y facilitando las pruebas y mantenimiento.
-
-🏗️ **Archivos a modificar o crear:**
-- Múltiples archivos en components
-
-🔗 **Dependencias:** Idealmente después de Tarea 3
-
-🎯 **Beneficio esperado:** Componentes más pequeños, cohesivos y fáciles de mantener, mejor testabilidad.
-
-### Subtareas:
-
-#### 4.1 Separación de VideoPlayer y VideoUI
-
-📌 **Título:** Separar lógica de reproducción de video de su UI
-
-📝 **Descripción:** Dividir el componente VideoStream actual en dos componentes: uno responsable de la lógica de reproducción y otro de la presentación visual.
-
-🏗️ **Archivos a modificar o crear:**
-- Modificar VideoStream.vue
-- Crear `src/components/VideoPlayer.vue`
-
-📂 **Archivos de referencia:**
-- VideoStream.vue (implementación actual)
-
-🔗 **Dependencias:** Idealmente después de Tarea 3
-
-🎯 **Beneficio esperado:** Mejor separación de responsabilidades, facilitando cambios en la presentación o lógica de manera independiente.
-
-#### 4.2 Creación de componente para manejo de errores
-
-📌 **Título:** Implementar componente dedicado para notificaciones de error
-
-📝 **Descripción:** Extraer la lógica de presentación de errores a un componente dedicado que pueda ser reutilizado en toda la aplicación.
-
-🏗️ **Archivos a modificar o crear:**
-- Crear `src/components/ErrorNotification.vue`
-
-📂 **Archivos de referencia:**
-- Home.vue (manejo actual de errores)
-
-🔗 **Dependencias:** Idealmente después de Tarea 1 (notificationStore)
-
-🎯 **Beneficio esperado:** Presentación consistente de errores en toda la aplicación, facilidad para modificar la UI de errores.
-
-#### 4.3 Extracción de controles a componentes independientes
-
-📌 **Título:** Dividir VideoControls en componentes más específicos
-
-📝 **Descripción:** Refactorizar VideoControls para extraer funcionalidades específicas (como botones de inicio/detención) a componentes más pequeños y específicos.
-
-🏗️ **Archivos a modificar o crear:**
-- Modificar VideoControls.vue
-- Crear `src/components/controls/StartStopButton.vue`
-- Crear `src/components/controls/StreamSelector.vue`
-
-📂 **Archivos de referencia:**
-- VideoControls.vue
-
-🔗 **Dependencias:** Idealmente después de Tarea 3
-
-🎯 **Beneficio esperado:** Componentes más pequeños y reutilizables con responsabilidades más específicas.
-
-#### 4.4 Creación de Layout Components
-
-📌 **Título:** Implementar componentes de layout para estructura consistente
-
-📝 **Descripción:** Desarrollar componentes dedicados para gestionar el layout de la aplicación, separando esta responsabilidad de los componentes de funcionalidad.
-
-🏗️ **Archivos a modificar o crear:**
-- Crear `src/components/layout/MainLayout.vue`
-- Crear `src/components/layout/VideoSection.vue`
-
-📂 **Archivos de referencia:**
-- Home.vue
-
-🔗 **Dependencias:** Ninguna específica
-
-🎯 **Beneficio esperado:** Mejor organización visual, separación de responsabilidades entre layout y funcionalidad.
-
-#### 4.5 Implementación de componente de carga
-
-📌 **Título:** Desarrollar componente para estados de carga
-
-📝 **Descripción:** Crear un componente dedicado para mostrar estados de carga durante la inicialización de los streams de video.
-
-🏗️ **Archivos a modificar o crear:**
-- Crear `src/components/LoadingIndicator.vue`
-
-📂 **Archivos de referencia:**
-- VideoStream.vue
-
-🔗 **Dependencias:** Ninguna específica
-
-🎯 **Beneficio esperado:** Mejor experiencia de usuario durante estados de carga, consistencia en la presentación.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Tarea 5: Implementación de Patrón Container/Presentational
-
-📌 **Título:** Aplicación del patrón Container/Presentational a componentes clave
-
-📝 **Descripción:** Reorganizar los componentes siguiendo el patrón Container/Presentational, donde los componentes container gestionan el estado y lógica, mientras que los presentacionales se enfocan en la UI.
-
-🏗️ **Archivos a modificar o crear:**
-- Reestructurar directorios en components
-- Crear nuevos componentes
-
-🔗 **Dependencias:** Tareas 1, 3 y 4
-
-🎯 **Beneficio esperado:** Clara separación entre lógica de negocio y presentación, mejor testabilidad y mantenimiento.
-
-### Subtareas:
-
-#### 5.1 Transformación de Home en Container Component
-
-📌 **Título:** Convertir Home.vue en un componente contenedor
-
-📝 **Descripción:** Refactorizar Home.vue para que actúe como un componente contenedor que coordina la lógica de negocio pero delega la presentación a componentes presentacionales.
-
-🏗️ **Archivos a modificar o crear:**
-- Modificar Home.vue
-- Crear `src/components/containers/HomeContainer.vue` (opcional)
-
-📂 **Archivos de referencia:**
-- `src/stores/videoStore.js`
-
-🔗 **Dependencias:** Tareas 1 y 3
-
-🎯 **Beneficio esperado:** Clara separación de responsabilidades, mejorando la mantenibilidad y testabilidad.
-
-#### 5.2 Creación de componentes presentacionales para VideoStream
-
-📌 **Título:** Desarrollar componentes presentacionales para streaming de video
-
-📝 **Descripción:** Crear componentes puramente presentacionales que reciban props y emitan eventos, sin lógica de negocio interna.
-
-🏗️ **Archivos a modificar o crear:**
-- Crear `src/components/presentation/VideoDisplay.vue`
-- Crear `src/components/presentation/StreamControls.vue`
-
-📂 **Archivos de referencia:**
+**🏗️ Archivos a modificar:**
 - VideoStream.vue
 - VideoControls.vue
+- HomePage.vue
 
-🔗 **Dependencias:** Tarea 4
+**📂 Archivos de referencia:**
+- Documentación oficial de Vue 3 sobre script setup
 
-🎯 **Beneficio esperado:** Componentes presentacionales más fáciles de probar y reutilizar.
+**🔗 Dependencias:**
+- Subtarea 2.1 (Migración de App.vue)
 
-#### 5.3 Implementación de Container para gestión de video
+**🎯 Beneficio esperado:** 
+- Coherencia en el estilo de código
+- Elimina código redundante
+- Mejora la legibilidad del código
 
-📌 **Título:** Crear componente contenedor para lógica de video
 
-📝 **Descripción:** Desarrollar un componente contenedor dedicado para la gestión de los streams de video, conectándose con el store pero delegando la presentación.
 
-🏗️ **Archivos a modificar o crear:**
-- Crear `src/components/containers/VideoContainer.vue`
 
-📂 **Archivos de referencia:**
-- `src/stores/videoStore.js`
-- `src/services/videoService.js` (si existe)
 
-🔗 **Dependencias:** Tareas 1, 2 y 3
 
-🎯 **Beneficio esperado:** Centralización de la lógica de video con clara separación de la presentación.
 
-#### 5.4 Refactorización de estructura de componentes
 
-📌 **Título:** Reorganizar estructura de directorios según patrón Container/Presentational
 
-📝 **Descripción:** Reestructurar la organización de los componentes en directorios que reflejen su naturaleza (container vs presentational) para mayor claridad.
 
-🏗️ **Archivos a modificar o crear:**
-- Crear directorios `src/components/containers` y `src/components/presentation`
-- Mover componentes a sus ubicaciones correspondientes
 
-📂 **Archivos de referencia:**
-- Estructura actual de components
 
-🔗 **Dependencias:** Subtareas 5.1, 5.2 y 5.3
 
-🎯 **Beneficio esperado:** Estructura de proyecto más clara que refleja las responsabilidades de los componentes.
 
-#### 5.5 Creación de interface props para comunicación entre componentes
 
-📌 **Título:** Definir interfaces claras para comunicación entre componentes
 
-📝 **Descripción:** Establecer interfaces claras mediante props y eventos para la comunicación entre componentes container y presentacionales.
 
-🏗️ **Archivos a modificar o crear:**
-- Modificar múltiples componentes para definir props y eventos
-- Crear `src/types` (opcional, si se usa TypeScript o JSDoc)
 
-📂 **Archivos de referencia:**
-- Componentes existentes
 
-🔗 **Dependencias:** Subtareas 5.1, 5.2 y 5.3
 
-🎯 **Beneficio esperado:** Contratos claros entre componentes, mejorando la mantenibilidad y testabilidad.
 
 
 
@@ -389,125 +82,221 @@
 
 
 
+## 📌 Tarea 3: Implementar gestión adecuada de configuración
 
+**📝 Descripción:** Actualmente, la aplicación presenta inconsistencias en cómo se accede a la configuración. Existe un configStore.js pero no se utiliza consistentemente, y hay valores hardcodeados en componentes como VideoStream.vue. Esta tarea busca centralizar toda la configuración en el configStore y asegurar que todos los componentes accedan a ella a través de este store.
 
+**🎯 Beneficio esperado:** 
+- Centralización de la configuración
+- Eliminación de valores hardcodeados
+- Mayor facilidad para cambiar la configuración en un único lugar
+- Facilita pruebas y entornos de desarrollo/producción
 
+### Subtarea 3.1: Centralizar URLs de API en configStore
 
+**📌 Título:** Centralizar configuración de URLs en configStore
 
+**📝 Descripción:** Asegurar que todas las URLs de API se definan en el configStore y se eliminen valores hardcodeados de componentes y servicios. Esto incluye revisar cómo se construyen las URLs en VideoStream.vue y videoService.js.
 
+**🏗️ Archivos a modificar:**
+- configStore.js
+- videoService.js
+- VideoStream.vue
 
+**📂 Archivos de referencia:**
+- .env (para configuraciones de entorno)
+- http.js (para ver cómo se maneja actualmente la base URL)
 
+**🔗 Dependencias:**
+- Ninguna, puede realizarse independientemente
 
+**🎯 Beneficio esperado:** 
+- Eliminación de valores hardcodeados
+- Centralización de configuración
+- Mayor facilidad para cambiar entornos
 
+### Subtarea 3.2: Estandarizar acceso a configuración en servicios
 
+**📌 Título:** Estandarizar acceso a configuración desde servicios
 
+**📝 Descripción:** Revisar todos los servicios para asegurar que obtienen su configuración del configStore en lugar de importar directamente variables de entorno o usar configuraciones hardcodeadas. Esto incluye actualizar videoService.js y http.js para que utilicen el configStore.
 
+**🏗️ Archivos a modificar:**
+- videoService.js
+- http.js
+- configService.js (evaluar si sigue siendo necesario)
 
+**📂 Archivos de referencia:**
+- configStore.js
 
+**🔗 Dependencias:**
+- Subtarea 3.1 (Centralización de URLs)
 
+**🎯 Beneficio esperado:** 
+- Coherencia en cómo se accede a la configuración
+- Eliminación de posibles duplicidades
+- Mayor facilidad para pruebas al permitir mockear la configuración
 
+### Subtarea 3.3: Evaluar y posiblemente eliminar configService redundante
 
+**📌 Título:** Evaluar redundancia entre configStore y configService
 
+**📝 Descripción:** Analizar si configService.js es necesario dado que existe configStore.js. Si se determina que hay duplicación de responsabilidades, se debe migrar toda la funcionalidad al configStore y eliminar o refactorizar el configService.
 
+**🏗️ Archivos a modificar o eliminar:**
+- configService.js
+- configStore.js (si se agregan funcionalidades)
 
+**📂 Archivos de referencia:**
+- Todos los archivos que importan configService
 
+**🔗 Dependencias:**
+- Subtareas 3.1 y 3.2
 
+**🎯 Beneficio esperado:** 
+- Eliminación de duplicidad de código
+- Mayor claridad sobre dónde debe gestionarse la configuración
+- Simplificación de la arquitectura
 
 
-## Tarea 7: Mejora en el Manejo de Errores
 
-📌 **Título:** Implementación de sistema global de manejo de errores
 
-📝 **Descripción:** Diseñar e implementar un sistema centralizado para la gestión, notificación y registro de errores, mejorando la robustez de la aplicación y la experiencia de usuario ante fallos.
 
-🏗️ **Archivos a modificar o crear:**
-- Crear `src/utils/errorHandler.js`
-- Modificar componentes que manejen errores
 
-🔗 **Dependencias:** Idealmente después de Tarea 1
 
-🎯 **Beneficio esperado:** Gestión consistente de errores, mejor experiencia de usuario, facilidad para debugging.
 
-### Subtareas:
 
-#### 7.1 Creación de servicio de notificación de errores
 
-📌 **Título:** Desarrollar servicio de notificación de errores
 
-📝 **Descripción:** Implementar un servicio dedicado para gestionar la notificación de errores de forma consistente en toda la aplicación.
 
-🏗️ **Archivos a modificar o crear:**
-- Crear `src/services/notificationService.js`
 
-📂 **Archivos de referencia:**
-- Home.vue (manejo actual de errores)
 
-🔗 **Dependencias:** Idealmente después de Tarea 2
 
-🎯 **Beneficio esperado:** Notificaciones de error consistentes y personalizables en toda la aplicación.
 
-#### 7.2 Implementación de interceptores globales para errors HTTP
 
-📌 **Título:** Crear interceptores HTTP para manejo centralizado de errores
 
-📝 **Descripción:** Configurar interceptores en el cliente HTTP para capturar y procesar errores de comunicación con la API de forma centralizada.
 
-🏗️ **Archivos a modificar o crear:**
-- Modificar `src/services/http.js` (si existe)
-- Crear `src/services/interceptors.js` (opcional)
 
-📂 **Archivos de referencia:**
-- `src/services/http.js` (si existe)
 
-🔗 **Dependencias:** Subtarea 2.1
 
-🎯 **Beneficio esperado:** Captura y procesamiento consistente de errores HTTP sin duplicación de código.
 
-#### 7.3 Creación de componente UI para notificaciones
 
-📌 **Título:** Desarrollar componente dedicado para mostrar notificaciones
 
-📝 **Descripción:** Implementar un componente reutilizable para mostrar notificaciones (errores, advertencias, información) de forma consistente.
 
-🏗️ **Archivos a modificar o crear:**
-- Crear `src/components/ui/Notification.vue`
 
-📂 **Archivos de referencia:**
-- Home.vue (manejo actual de errores)
 
-🔗 **Dependencias:** Subtarea 7.1
 
-🎯 **Beneficio esperado:** Presentación visual consistente de mensajes al usuario.
 
-#### 7.4 Integración con sistema de manejo global de errores de Vue
 
-📌 **Título:** Configurar manejador global de errores de Vue
 
-📝 **Descripción:** Configurar el hook `errorCaptured` y `app.config.errorHandler` para capturar errores no manejados en la aplicación.
 
-🏗️ **Archivos a modificar o crear:**
-- Modificar main.js
-- Crear `src/utils/globalErrorHandler.js`
 
-📂 **Archivos de referencia:**
-- main.js
 
-🔗 **Dependencias:** Subtareas 7.1 y 7.3
 
-🎯 **Beneficio esperado:** Captura de errores no manejados específicamente, evitando fallos silenciosos.
 
-#### 7.5 Implementación de registro de errores
 
-📌 **Título:** Crear sistema de registro (logging) de errores
+## 📌 Tarea 4: Implementar uso consistente de composables
 
-📝 **Descripción:** Implementar un sistema para registrar errores con fines de depuración y monitoreo, posiblemente enviando información a un servicio backend.
+**📝 Descripción:** El proyecto tiene definidos varios composables (`useVideoState.js`, useVideoStream.js, useErrorHandling.js) pero no se utilizan de manera consistente en los componentes. Esta tarea busca implementar el uso efectivo de estos composables para extraer y reutilizar lógica común, mejorando la separación de responsabilidades.
 
-🏗️ **Archivos a modificar o crear:**
-- Crear `src/services/logService.js`
+**🎯 Beneficio esperado:** 
+- Mayor reutilización de código
+- Mejor separación de responsabilidades
+- Reducción de código en componentes
+- Mayor facilidad para pruebas unitarias
+- Componentes más enfocados en la presentación
 
-📂 **Archivos de referencia:**
-- `src/utils/errorHandler.js`
+### Subtarea 4.1: Implementar useVideoState en HomePage
 
-🔗 **Dependencias:** Subtareas 7.1 y 7.2
+**📌 Título:** Integrar useVideoState en HomePage
 
-🎯 **Beneficio esperado:** Capacidad para registrar y analizar errores para diagnóstico y mejora continua.
+**📝 Descripción:** Implementar el composable useVideoState en HomePage.vue para gestionar el estado de los streams de video a través del store. Esto implica revisar y adaptar el composable actual para que utilice el videoStore en lugar de gestionar su propio estado.
+
+**🏗️ Archivos a modificar:**
+- useVideoState.js
+- HomePage.vue
+
+**📂 Archivos de referencia:**
+- videoStore.js
+
+**🔗 Dependencias:**
+- Tarea 1 (Eliminar duplicidad de estado)
+
+**🎯 Beneficio esperado:** 
+- Extracción de lógica de gestión de estado del componente
+- Mayor reutilización de código
+- Componente más enfocado en la presentación
+
+### Subtarea 4.2: Implementar useErrorHandling para gestión de errores
+
+**📌 Título:** Integrar useErrorHandling con notificationStore
+
+**📝 Descripción:** Adaptar el composable useErrorHandling para que utilice el notificationStore para mostrar errores al usuario. Actualmente, los errores se manejan de forma inconsistente y el composable no se utiliza en los componentes.
+
+**🏗️ Archivos a modificar:**
+- useErrorHandling.js
+- HomePage.vue (para implementar el composable)
+- notificationStore.js (posiblemente para agregar métodos específicos)
+
+**📂 Archivos de referencia:**
+- errorHandler.js
+
+**🔗 Dependencias:**
+- Tarea 1 (para el manejo de errores)
+
+**🎯 Beneficio esperado:** 
+- Gestión coherente de errores en toda la aplicación
+- Mejor experiencia de usuario al mostrar errores
+- Separación de lógica de errores de los componentes
+
+### Subtarea 4.3: Implementar useVideoStream para manejo del stream
+
+**📌 Título:** Implementar useVideoStream en componentes de video
+
+**📝 Descripción:** Adaptar e implementar el composable useVideoStream en los componentes que manipulan streams de video para encapsular la lógica relacionada con el manejo del stream, como iniciar, detener y manejar errores.
+
+**🏗️ Archivos a modificar:**
+- useVideoStream.js
+- VideoStream.vue
+
+**📂 Archivos de referencia:**
+- videoService.js
+
+**🔗 Dependencias:**
+- Subtarea 4.1 y 4.2 (para integración con estado y errores)
+
+**🎯 Beneficio esperado:** 
+- Encapsulación de lógica específica de streams
+- Componentes más ligeros y enfocados en presentación
+- Mayor facilidad para pruebas unitarias
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

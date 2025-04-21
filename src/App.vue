@@ -1,4 +1,7 @@
-<!-- filepath: App.vue -->
+<!--
+Path: src/App.vue
+-->
+
 <template>
   <div id="app">
     <header>
@@ -21,15 +24,8 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import HomePage from './components/HomePage.vue';
-
-export default {
-  name: 'App',
-  components: {
-    HomePage
-  }
-}
 </script>
 
 <style>
