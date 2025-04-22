@@ -1,3 +1,21 @@
+<!--
+Path: src/components/VideoControlsContainer.vue
+Componente: VideoControlsContainer (Container)
+
+DESCRIPCIÓN:
+Componente contenedor que maneja la lógica y el estado para controlar los streams de video,
+conectándose con el store y enviando los datos al componente presentacional.
+
+PROPS:
+- isActive: Boolean - Indica si el stream está activo
+- isLoading: Boolean - Indica si el stream está cargando
+- streamType: String - Tipo de stream ('original' o 'processed')
+
+EVENTOS:
+- start: () => void - Emitido cuando se solicita iniciar un stream
+- stop: () => void - Emitido cuando se solicita detener un stream
+-->
+
 <template>
   <VideoControlsPresentation 
     :is-active="isActive"

@@ -30,7 +30,7 @@ EVENTOS:
             <h2 class="h4 mb-0">Video Original</h2>
           </div>
           <div class="card-body">
-            <VideoControls 
+            <VideoControlsContainer 
               :is-active="originalActive" 
               :is-loading="isOriginalLoading"
               @start="$emit('start-original')" 
@@ -54,7 +54,7 @@ EVENTOS:
             <h2 class="h4 mb-0">Video Procesado</h2>
           </div>
           <div class="card-body">
-            <VideoControls 
+            <VideoControlsContainer 
               :is-active="processedActive"
               :is-loading="isProcessedLoading" 
               @start="$emit('start-processed')" 
@@ -78,7 +78,7 @@ EVENTOS:
 
 <script setup>
 import VideoStream from '@/components/VideoStream.vue'
-import VideoControls from '@/components/VideoControls.vue'
+import VideoControlsContainer from '@/components/VideoControlsContainer.vue'
 
 // eslint-disable-next-line no-undef
 defineOptions({ name: 'HomePage' })
