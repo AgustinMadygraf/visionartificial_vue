@@ -1,5 +1,17 @@
 <!--
-Path: src/components/NotificationsContainer.vue
+Path: src/components/presentational/NotificationsList.vue
+Componente: NotificationsList (Presentacional)
+
+DESCRIPCIÓN:
+Componente presentacional puro que muestra notificaciones toast en diferentes posiciones
+de la pantalla y con diferentes estilos según el tipo.
+
+PROPS:
+- notifications: Array - Lista de notificaciones a mostrar
+- position: String - Posición de las notificaciones ('top-right', 'top-left', 'bottom-right', 'bottom-left')
+
+EVENTOS:
+- close: (id: number|string) => void - Emitido cuando se cierra una notificación específica
 -->
 
 <template>
@@ -12,7 +24,7 @@ Path: src/components/NotificationsContainer.vue
           <i :class="iconType(notification.type)"></i>
         </div>
         <strong class="me-auto">{{ notification.title }}</strong>
-        <button type="button" class="btn-close" @click="removeNotification(notification.id)"></button>
+        <button type="button" class="btn-close" @click="onClose(notification.id)"></button>
       </div>
       <div class="toast-body">
         {{ notification.text }}
@@ -23,11 +35,20 @@ Path: src/components/NotificationsContainer.vue
 
 <script setup>
 import { computed } from 'vue'
-import { useNotificationStore } from '@/stores/notificationStore'
-import { storeToRefs } from 'pinia'
+
+// Definir el nombre del componente como multi-palabra
+// eslint-disable-next-line no-undef
+defineOptions({
+  name: 'NotificationsList'
+})
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
+  notifications: {
+    type: Array,
+    required: true,
+    default: () => []
+  },
   position: {
     type: String,
     default: 'top-right',
@@ -35,9 +56,8 @@ const props = defineProps({
   }
 })
 
-const notificationStore = useNotificationStore()
-const { notifications } = storeToRefs(notificationStore)
-const { removeNotification } = notificationStore
+// eslint-disable-next-line no-undef
+const emit = defineEmits(['close'])
 
 const positionClass = computed(() => {
   switch (props.position) {
@@ -92,6 +112,10 @@ const iconType = (type) => {
       return 'bi bi-info-circle-fill';
   }
 };
+
+function onClose(id) {
+  emit('close', id);
+}
 </script>
 
 <style scoped>

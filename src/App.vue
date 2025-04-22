@@ -44,7 +44,7 @@ Path: src/App.vue
 
 <script setup>
 import HomeContainer from './containers/HomeContainer.vue';
-import NotificationsContainer from './components/NotificationsContainer.vue';
+import NotificationsContainer from './containers/NotificationsContainer.vue';
 </script>
 
 <style>

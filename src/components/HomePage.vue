@@ -38,7 +38,7 @@ EVENTOS:
               stream-type="original"
               class="mb-3"
             />
-            <VideoStream 
+            <VideoStreamContainer 
               stream-type="original" 
               :is-active="originalActive" 
               placeholder-text="Video Original Detenido"
@@ -62,7 +62,7 @@ EVENTOS:
               stream-type="processed"
               class="mb-3"
             />
-            <VideoStream 
+            <VideoStreamContainer 
               stream-type="processed" 
               :is-active="processedActive" 
               placeholder-text="Video Procesado Detenido"
@@ -77,8 +77,8 @@ EVENTOS:
 </template>
 
 <script setup>
-import VideoStream from '@/components/VideoStream.vue'
-import VideoControlsContainer from '@/components/VideoControlsContainer.vue'
+import VideoStreamContainer from '@/containers/VideoStreamContainer.vue'
+import VideoControlsContainer from '@/containers/VideoControlsContainer.vue'
 
 // eslint-disable-next-line no-undef
 defineOptions({ name: 'HomePage' })

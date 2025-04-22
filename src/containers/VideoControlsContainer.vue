@@ -1,5 +1,5 @@
 <!--
-Path: src/components/VideoControlsContainer.vue
+Path: src/containers/VideoControlsContainer.vue
 Componente: VideoControlsContainer (Container)
 
 DESCRIPCIÓN:
