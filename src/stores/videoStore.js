@@ -3,7 +3,7 @@ Path: src/stores/videoStore.js
 */
 
 import { defineStore } from 'pinia'
-import videoService from '@/services/videoService'
+import serviceFactory from '@/services/serviceFactory'
 
 export const useVideoStore = defineStore('video', {
   state: () => ({
@@ -22,8 +22,14 @@ export const useVideoStore = defineStore('video', {
   }),
   
   getters: {
-    originalStreamUrl: () => videoService.getVideoStreamUrl('original'),
-    processedStreamUrl: () => videoService.getVideoStreamUrl('processed'),
+    originalStreamUrl: () => {
+      const videoService = serviceFactory.getVideoService();
+      return videoService.getVideoStreamUrl('original');
+    },
+    processedStreamUrl: () => {
+      const videoService = serviceFactory.getVideoService();
+      return videoService.getVideoStreamUrl('processed');
+    },
     isOriginalLoading: state => state.streamStates.original.loading,
     isProcessedLoading: state => state.streamStates.processed.loading
   },

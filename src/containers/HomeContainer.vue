@@ -17,7 +17,7 @@ Path: src/containers/HomeContainer.vue
 </template>
 
 <script setup>
-import HomePage from '@/components/HomePage.vue'
+import HomePage from '@/components/presentational/HomePage.vue'
 import { useVideoMediator } from '@/composables/useVideoMediator'
 
 // eslint-disable-next-line no-undef

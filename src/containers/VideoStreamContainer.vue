@@ -32,7 +32,7 @@ import { watch, computed } from 'vue'
 import { useVideoStream } from '@/composables/useVideoStream'
 import { useVideoStore } from '@/stores/videoStore'
 import { storeToRefs } from 'pinia'
-import VideoStream from '@/components/VideoStream.vue'
+import VideoStream from '@/components/presentational/VideoStream.vue'
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
