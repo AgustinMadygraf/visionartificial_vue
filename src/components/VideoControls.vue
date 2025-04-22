@@ -1,33 +1,45 @@
 <template>
   <div class="video-controls">
-    <div class="controls">
+    <div class="btn-group d-flex flex-wrap mb-2" role="group" aria-label="Video controls">
       <button 
-        class="btn btn-success" 
+        class="btn btn-success me-2 mb-2" 
         @click="onStart" 
         :disabled="props.isActive || props.isLoading"
       >
-        {{ props.isLoading ? 'Iniciando...' : 'Iniciar' }}
+        <span v-if="props.isLoading">
+          <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          Iniciando...
+        </span>
+        <span v-else>
+          <i class="bi bi-play-fill"></i> Iniciar
+        </span>
       </button>
       <button 
-        class="btn btn-danger" 
+        class="btn btn-danger mb-2" 
         @click="onStop" 
         :disabled="!props.isActive || props.isLoading"
       >
-        Detener
+        <i class="bi bi-stop-fill"></i> Detener
       </button>
     </div>
-    <div class="status-message" :class="messageType" v-if="statusMessage">
-      {{ statusMessage }}
+    <div v-if="statusMessage" 
+         class="alert p-2 mb-0" 
+         :class="{
+           'alert-danger': messageType === 'error',
+           'alert-info': messageType === 'info',
+           'alert-success': messageType === 'success'
+         }">
+      <small>{{ statusMessage }}</small>
     </div>
   </div>
 </template>
 
 <script setup>
-/* global defineProps, defineEmits */
 import { computed } from 'vue'
 import { useVideoStore } from '@/stores/videoStore'
 import { storeToRefs } from 'pinia'
 
+// eslint-disable-next-line no-undef
 const props = defineProps({
   isActive: {
     type: Boolean,
@@ -44,6 +56,7 @@ const props = defineProps({
   }
 })
 
+// eslint-disable-next-line no-undef
 const emit = defineEmits(['start', 'stop'])
 
 const videoStore = useVideoStore()
@@ -79,40 +92,10 @@ function onStop() {
 </script>
 
 <style scoped>
-.video-controls {
-  margin-bottom: 10px;
-}
-
-.controls {
-  margin-bottom: 8px;
-}
-
-.btn {
-  margin-right: 5px;
-}
-
-.status-message {
-  font-size: 0.9em;
-  padding: 4px 8px;
-  border-radius: 4px;
-  margin-top: 5px;
-}
-
-.status-message.error {
-  background-color: #fee;
-  color: #c33;
-  border: 1px solid #fcc;
-}
-
-.status-message.info {
-  background-color: #eef;
-  color: #33c;
-  border: 1px solid #ccf;
-}
-
-.status-message.success {
-  background-color: #efe;
-  color: #3c3;
-  border: 1px solid #cfc;
+@media (max-width: 576px) {
+  .btn {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem;
+  }
 }
 </style>

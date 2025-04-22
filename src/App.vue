@@ -5,16 +5,34 @@ Path: src/App.vue
 <template>
   <div id="app">
     <header>
-      <nav class="navbar navbar-dark bg-dark">
+      <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
         <div class="container">
           <span class="navbar-brand">Visión Artificial</span>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">Inicio</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Configuración</a>
+              </li>
+            </ul>
+          </div>
         </div>
       </nav>
     </header>
     
     <main class="py-4">
-      <HomePage />
+      <div class="container">
+        <HomePage />
+      </div>
     </main>
+    
+    <!-- Componente de notificaciones responsivo -->
+    <NotificationsContainer position="bottom-right" />
     
     <footer class="bg-dark text-light py-3 mt-5">
       <div class="container text-center">
@@ -26,6 +44,7 @@ Path: src/App.vue
 
 <script setup>
 import HomePage from './components/HomePage.vue';
+import NotificationsContainer from './components/NotificationsContainer.vue';
 </script>
 
 <style>
@@ -49,6 +68,5 @@ main {
   flex: 1;
 }
 
-/* Si estás utilizando Bootstrap, puedes agregar la importación aquí o
-   incluirlo en el main.js o index.html */
+/* Bootstrap está importado en main.js */
 </style>
