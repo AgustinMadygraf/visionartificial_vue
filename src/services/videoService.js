@@ -1,10 +1,10 @@
 // Servicio para gestión de streams de video
-import { API_BASE_URL } from './http'
+import { useConfigStore } from '@/stores/configStore'
 
 function getVideoStreamUrl(type = 'original') {
-  const endpoint = type === 'original' ? 'video/original' : 'video/process'
-  // Se agrega un parámetro de tiempo para evitar caché
-  return `${API_BASE_URL.replace(/\/$/, '')}/${endpoint}?t=${Date.now()}`
+  const configStore = useConfigStore()
+  // Utilizamos el getter que ya incluye la lógica de cache busting
+  return configStore.getVideoUrl(type)
 }
 
 export default {

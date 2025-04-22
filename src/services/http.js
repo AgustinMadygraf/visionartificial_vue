@@ -1,9 +1,12 @@
 // Configuración base para servicios HTTP
 // Se puede adaptar para usar axios si se prefiere
 
-const API_BASE_URL = process.env.VUE_APP_API_BASE_URL || 'http://localhost:3000';
+import { useConfigStore } from '@/stores/configStore'
 
 async function httpRequest(endpoint, { method = 'GET', headers = {}, body = null, ...customConfig } = {}) {
+  const configStore = useConfigStore()
+  const API_BASE_URL = configStore.apiBaseUrl
+  
   const config = {
     method,
     headers: {
@@ -29,4 +32,3 @@ async function httpRequest(endpoint, { method = 'GET', headers = {}, body = null
 }
 
 export default httpRequest;
-export { API_BASE_URL };

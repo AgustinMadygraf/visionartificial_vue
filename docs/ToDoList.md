@@ -1,702 +1,871 @@
-## 🔶 TAREA 3: Mejora de la Separación de Responsabilidades en Composables
+# Listado Detallado de Tareas y Subtareas para el Proyecto de Visión Artificial con Vue.js
 
-### 📌 Título
-Refactorización de composables para mejor separación de responsabilidades
+## 📌 TAREA 1: Centralización de Configuración de API
 
-### 📝 Descripción
-Reorganizar y refactorizar los composables existentes para que cada uno tenga una única responsabilidad bien definida, siguiendo el principio SRP (Single Responsibility Principle), mejorando su testabilidad y reutilización.
+**Descripción:** Implementar un sistema centralizado de configuración para las URLs de API y otros parámetros, eliminando duplicaciones y permitiendo diferentes configuraciones según el entorno (desarrollo/producción).
 
-### 🏗️ Archivos a modificar o crear
-- useVideoState.js
+**Beneficio esperado:** Mayor consistencia en la aplicación, facilidad para cambiar configuraciones entre entornos, y reducción de errores por configuración duplicada.
+
+### Subtarea 1.1: Creación de archivos de entorno
+**Descripción:** Crear archivos .env para diferentes entornos de ejecución que contendrán variables de configuración específicas.
+**Archivos a modificar o crear:** 
+- `.env.development` (Crear)
+- `.env.production` (Crear)
+**Archivos de referencia:** 
+- vue.config.js (para entender la configuración actual)
+**Dependencias:** Ninguna
+**Beneficio esperado:** Separación clara de configuraciones por entorno de ejecución.
+
+### Subtarea 1.2: Definición de variables de entorno para API
+**Descripción:** Configurar variables específicas en los archivos .env para las URLs de API y otros parámetros críticos.
+**Archivos a modificar o crear:**
+- `.env.development`
+- `.env.production`
+**Archivos de referencia:** 
+- `http.js` (contiene URL actual: localhost:3000)
+- `configStore.js` (contiene URL actual: localhost:5000)
+**Dependencias:** Subtarea 1.1
+**Beneficio esperado:** Unificación de URLs de API en un único punto de configuración por entorno.
+
+### Subtarea 1.3: Actualización del configStore
+**Descripción:** Refactorizar el configStore para que consuma las variables de entorno y proporcione getters para todos los endpoints necesarios.
+**Archivos a modificar o crear:**
+- configStore.js
+**Archivos de referencia:**
+- `videoService.js` (para identificar endpoints necesarios)
+- `useVideoStream.js` (para identificar URLs utilizadas)
+**Dependencias:** Subtarea 1.2
+**Beneficio esperado:** Configuración centralizada con API clara para que otros componentes/servicios consuman las URLs.
+
+### Subtarea 1.4: Modificación del servicio HTTP
+**Descripción:** Actualizar el servicio HTTP para que utilice la configuración centralizada en lugar de su propia definición de URL.
+**Archivos a modificar o crear:**
+- http.js
+**Archivos de referencia:**
+- configStore.js (fuente de configuración)
+**Dependencias:** Subtarea 1.3
+**Beneficio esperado:** Eliminación de duplicación de configuración y coherencia con la configuración central.
+
+### Subtarea 1.5: Actualización del servicio de video
+**Descripción:** Modificar el servicio de video para que obtenga las URLs desde el configStore, eliminando la dependencia de http.js.
+**Archivos a modificar o crear:**
+- videoService.js
+**Archivos de referencia:**
+- configStore.js (configuración central)
+- http.js (dependencia actual)
+**Dependencias:** Subtarea 1.3, Subtarea 1.4
+**Beneficio esperado:** Mejor separación de responsabilidades entre servicios y menor acoplamiento.
+
+### Subtarea 1.6: Actualización de composables
+**Descripción:** Refactorizar los composables relacionados con video para que utilicen los getters del configStore para acceder a las URLs.
+**Archivos a modificar o crear:**
 - useVideoStream.js
-- useErrorHandling.js
-- src/composables/useVideoLifecycle.js (nuevo)
-- src/composables/useVideoSettings.js (nuevo)
+**Archivos de referencia:**
+- configStore.js (configuración central)
+**Dependencias:** Subtarea 1.3
+**Beneficio esperado:** Consistencia en el acceso a configuraciones y eliminación de lógica duplicada para construir URLs.
 
-### 📂 Archivos de referencia
-- HomePage.vue
-- videoStore.js
+### Subtarea 1.7: Configuración del proxy de desarrollo
+**Descripción:** Actualizar la configuración del servidor de desarrollo para que utilice las mismas variables de entorno.
+**Archivos a modificar o crear:**
+- vue.config.js
+**Archivos de referencia:**
+- `.env.development` (variables de entorno)
+**Dependencias:** Subtarea 1.2
+**Beneficio esperado:** Consistencia entre la configuración de la aplicación y el servidor de desarrollo.
+
+### Subtarea 1.8: Documentación de configuración
+**Descripción:** Crear documentación clara sobre el nuevo sistema de configuración y cómo utilizarlo.
+**Archivos a modificar o crear:**
+- README.md o nuevo archivo `CONFIGURATION.md`
+**Archivos de referencia:**
 - configStore.js
-
-### 🔗 Dependencias
-Idealmente se realizaría después de la Tarea 2 para tener un contexto claro de dónde se utilizan los composables.
-
-### 🎯 Beneficio esperado
-Composables más cohesivos, testables y reutilizables, con responsabilidades claramente definidas.
-
-#### Subtarea 3.1: Análisis de responsabilidades de composables existentes
-- **Título**: Identificar responsabilidades mezcladas en composables actuales
-- **Descripción**: Revisar los composables existentes para identificar cuando un composable maneja múltiples responsabilidades que deberían estar separadas
-- **Archivos a analizar**: src/composables/*.js
-- **Archivos de referencia**: src/components/*.vue, src/stores/*.js
-- **Dependencias**: Ninguna
-- **Beneficio esperado**: Mapa claro de responsabilidades para guiar la refactorización
-
-#### Subtarea 3.2: Extracción de lógica de ciclo de vida del video
-- **Título**: Crear composable para ciclo de vida del video
-- **Descripción**: Extraer la lógica relacionada con el inicio, pausa y finalización de videos a un composable dedicado
-- **Archivos a crear**: src/composables/useVideoLifecycle.js
-- **Archivos a modificar**: useVideoState.js
-- **Archivos de referencia**: videoStore.js
-- **Dependencias**: Subtarea 3.1
-- **Beneficio esperado**: Separación clara de la lógica de ciclo de vida del video
-
-#### Subtarea 3.3: Creación de composable para configuración de video
-- **Título**: Implementar composable para gestión de configuraciones
-- **Descripción**: Extraer la lógica relacionada con la configuración del video (resolución, fps, etc.) a un composable dedicado
-- **Archivos a crear**: src/composables/useVideoSettings.js
-- **Archivos a modificar**: src/composables/useVideoState.js, useVideoStream.js
-- **Archivos de referencia**: configStore.js
-- **Dependencias**: Subtarea 3.1
-- **Beneficio esperado**: Gestión de configuración de video desacoplada y reutilizable
-
-#### Subtarea 3.4: Refactorización de useVideoState
-- **Título**: Redefinir useVideoState para enfocarse solo en estado
-- **Descripción**: Refactorizar useVideoState para que solo se encargue de proporcionar acceso reactivo al estado del video
-- **Archivos a modificar**: useVideoState.js
-- **Archivos de referencia**: videoStore.js
-- **Dependencias**: Subtareas 3.2, 3.3
-- **Beneficio esperado**: Composable con responsabilidad única para el acceso al estado
-
-#### Subtarea 3.5: Refactorización de useVideoStream
-- **Título**: Simplificar useVideoStream para enfocarse en streams
-- **Descripción**: Refactorizar useVideoStream para que solo gestione la obtención y procesamiento de streams
-- **Archivos a modificar**: useVideoStream.js
-- **Archivos de referencia**: useVideoState.js
-- **Dependencias**: Subtareas 3.2, 3.3, 3.4
-- **Beneficio esperado**: Responsabilidad única para la gestión de streams de video
-
-#### Subtarea 3.6: Mejora de useErrorHandling
-- **Título**: Expandir useErrorHandling para centralizar manejo de errores
-- **Descripción**: Refactorizar useErrorHandling para que sea un sistema centralizado de gestión de errores con capacidad de registro y notificación
-- **Archivos a modificar**: useErrorHandling.js
-- **Archivos a crear**: src/composables/useNotification.js (opcional)
-- **Archivos de referencia**: notificationStore.js
-- **Dependencias**: Subtarea 3.1
-- **Beneficio esperado**: Sistema de manejo de errores más robusto y centralizado
-
-#### Subtarea 3.7: Documentación de interfaces de composables
-- **Título**: Documentar la API pública de cada composable
-- **Descripción**: Añadir comentarios descriptivos sobre los parámetros, valores de retorno y comportamiento esperado de cada función exportada por los composables
-- **Archivos a modificar**: Todos los composables
-- **Archivos de referencia**: Ninguno
-- **Dependencias**: Subtareas 3.2 - 3.6
-- **Beneficio esperado**: Mayor claridad sobre cómo utilizar los composables
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## 🔶 TAREA 4: Reducción del Acoplamiento con Stores
-
-### 📌 Título
-Desacoplamiento entre componentes y stores
-
-### 📝 Descripción
-Reducir el acoplamiento directo entre componentes y stores mediante la implementación de abstracciones, adaptadores o inyección de dependencias, mejorando la testabilidad y flexibilidad de los componentes.
-
-### 🏗️ Archivos a modificar o crear
-- src/composables/adapters/useVideoStoreAdapter.js (nuevo)
-- src/composables/adapters/useConfigStoreAdapter.js (nuevo)
-- src/composables/adapters/useNotificationStoreAdapter.js (nuevo)
-- src/components que acceden directamente a stores
-
-### 📂 Archivos de referencia
-- videoStore.js
-- configStore.js
-- notificationStore.js
-- useVideoState.js
-
-### 🔗 Dependencias
-Esta tarea se beneficiaría después de completar la Tarea 2 y 3, ya que implica cambios en cómo los componentes acceden al estado.
-
-### 🎯 Beneficio esperado
-Componentes desacoplados de la implementación específica de gestión de estado, mayor facilidad para pruebas unitarias y flexibilidad para cambiar la implementación del estado.
-
-#### Subtarea 4.1: Análisis de uso de stores
-- **Título**: Mapear uso directo de stores en componentes y composables
-- **Descripción**: Identificar todos los puntos donde se accede directamente a los stores desde componentes o composables
-- **Archivos a analizar**: Todos los componentes y composables
-- **Archivos de referencia**: src/stores/*.js
-- **Dependencias**: Ninguna
-- **Beneficio esperado**: Visibilidad de dónde se necesitan adaptadores o abstracciones
-
-#### Subtarea 4.2: Creación de adaptador para videoStore
-- **Título**: Implementar adaptador para videoStore
-- **Descripción**: Crear un adaptador que encapsule el acceso a videoStore y exponga una interfaz consistente
-- **Archivos a crear**: src/composables/adapters/useVideoStoreAdapter.js
-- **Archivos de referencia**: videoStore.js
-- **Dependencias**: Subtarea 4.1
-- **Beneficio esperado**: Acceso desacoplado al estado del video
-
-#### Subtarea 4.3: Creación de adaptador para configStore
-- **Título**: Implementar adaptador para configStore
-- **Descripción**: Crear un adaptador que encapsule el acceso a configStore y proporcione métodos para acceder y modificar la configuración
-- **Archivos a crear**: src/composables/adapters/useConfigStoreAdapter.js
-- **Archivos de referencia**: configStore.js
-- **Dependencias**: Subtarea 4.1
-- **Beneficio esperado**: Acceso desacoplado a la configuración
-
-#### Subtarea 4.4: Creación de adaptador para notificationStore
-- **Título**: Implementar adaptador para notificationStore
-- **Descripción**: Crear un adaptador que encapsule el acceso a notificationStore y proporcione métodos para enviar y leer notificaciones
-- **Archivos a crear**: src/composables/adapters/useNotificationStoreAdapter.js
-- **Archivos de referencia**: notificationStore.js
-- **Dependencias**: Subtarea 4.1
-- **Beneficio esperado**: Sistema de notificaciones desacoplado y reutilizable
-
-#### Subtarea 4.5: Refactorización de useVideoState para usar adaptadores
-- **Título**: Actualizar useVideoState para utilizar el adaptador
-- **Descripción**: Modificar useVideoState para que utilice useVideoStoreAdapter en lugar de acceder directamente al store
-- **Archivos a modificar**: useVideoState.js
-- **Archivos de referencia**: src/composables/adapters/useVideoStoreAdapter.js
-- **Dependencias**: Subtarea 4.2
-- **Beneficio esperado**: Composable de estado desacoplado de la implementación del store
-
-#### Subtarea 4.6: Refactorización de componentes para usar adaptadores
-- **Título**: Reemplazar uso directo de stores en componentes
-- **Descripción**: Modificar componentes que acceden directamente a stores para usar los adaptadores correspondientes
-- **Archivos a modificar**: Componentes identificados en subtarea 4.1
-- **Archivos de referencia**: src/composables/adapters/*.js
-- **Dependencias**: Subtareas 4.2, 4.3, 4.4
-- **Beneficio esperado**: Componentes libres de dependencias directas a stores específicos
-
-#### Subtarea 4.7: Implementación de inyección opcional de stores
-- **Título**: Habilitar inyección de stores para testing
-- **Descripción**: Modificar adaptadores para permitir la inyección opcional de stores, facilitando pruebas con mocks
-- **Archivos a modificar**: src/composables/adapters/*.js
-- **Archivos de referencia**: Ninguno
-- **Dependencias**: Subtareas 4.2, 4.3, 4.4
-- **Beneficio esperado**: Mayor facilidad para pruebas unitarias con mocks
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## 🔶 TAREA 5: Estandarización de Patrones de Comunicación entre Componentes
-
-### 📌 Título
-Definición e implementación de patrones consistentes de comunicación entre componentes
-
-### 📝 Descripción
-Establecer y aplicar patrones claros y consistentes para la comunicación entre componentes padres e hijos, entre componentes hermanos, y para la comunicación global, mejorando la previsibilidad y mantenibilidad del código.
-
-### 🏗️ Archivos a modificar o crear
-- src/utils/eventBus.js (opcional, para comunicación entre componentes no relacionados)
-- Componentes que requieren comunicación
-
-### 📂 Archivos de referencia
-- src/components/*.vue
-- src/containers/*.vue (después de Tarea 2)
-
-### 🔗 Dependencias
-Esta tarea se beneficiaría después de implementar el patrón Container/Presentational (Tarea 2).
-
-### 🎯 Beneficio esperado
-Comunicación predecible y consistente entre componentes, facilitando la depuración y reduciendo errores por comunicación incorrecta.
-
-#### Subtarea 5.1: Documentación de patrones de comunicación actual
-- **Título**: Analizar patrones de comunicación existentes
-- **Descripción**: Revisar la base de código para identificar todos los métodos de comunicación entre componentes actualmente utilizados
-- **Archivos a analizar**: Todos los componentes .vue
-- **Archivos de referencia**: Ninguno
-- **Dependencias**: Ninguna
-- **Beneficio esperado**: Comprensión clara de los diferentes patrones utilizados actualmente
-
-#### Subtarea 5.2: Definición de guía de comunicación entre componentes
-- **Título**: Crear estándares para comunicación entre componentes
-- **Descripción**: Documentar reglas claras sobre qué métodos de comunicación utilizar en diferentes situaciones (props/eventos, stores, servicios, etc.)
-- **Archivos a crear**: docs/component-communication.md
-- **Archivos de referencia**: Análisis de la subtarea 5.1
-- **Dependencias**: Subtarea 5.1
-- **Beneficio esperado**: Guía de referencia para mantener una comunicación consistente
-
-#### Subtarea 5.3: Implementación de contratos de props y eventos
-- **Título**: Definir contratos explícitos para props y eventos
-- **Descripción**: Agregar validación de props y documentación de eventos en todos los componentes
-- **Archivos a modificar**: Todos los componentes .vue
-- **Archivos de referencia**: Documentación de Vue sobre validación de props
-- **Dependencias**: Subtarea 5.2
-- **Beneficio esperado**: Interfaces claras entre componentes que facilitan el mantenimiento
-
-#### Subtarea 5.4: Creación de eventBus para comunicación global (opcional)
-- **Título**: Implementar sistema de eventos globales
-- **Descripción**: Crear un sistema de eventos globales para comunicación entre componentes no relacionados directamente, si es necesario
-- **Archivos a crear**: src/utils/eventBus.js
-- **Archivos de referencia**: Ninguno
-- **Dependencias**: Subtarea 5.2
-- **Beneficio esperado**: Método consistente para comunicación entre componentes no relacionados
-
-#### Subtarea 5.5: Refactorización de comunicación padre-hijo
-- **Título**: Estandarizar comunicación entre componentes padres e hijos
-- **Descripción**: Revisar y refactorizar la comunicación ascendente y descendente entre componentes padres e hijos según los estándares definidos
-- **Archivos a modificar**: Componentes con relaciones padre-hijo
-- **Archivos de referencia**: docs/component-communication.md
-- **Dependencias**: Subtareas 5.2, 5.3
-- **Beneficio esperado**: Comunicación predecible y consistente entre componentes relacionados
-
-#### Subtarea 5.6: Refactorización de comunicación entre componentes no relacionados
-- **Título**: Estandarizar comunicación entre componentes no relacionados
-- **Descripción**: Revisar y refactorizar la comunicación entre componentes que no tienen relación directa padre-hijo
-- **Archivos a modificar**: Componentes que requieren comunicación indirecta
-- **Archivos de referencia**: docs/component-communication.md, src/utils/eventBus.js
-- **Dependencias**: Subtareas 5.2, 5.4
-- **Beneficio esperado**: Comunicación coherente entre componentes no relacionados directamente
-
-#### Subtarea 5.7: Documentación de flujos de comunicación
-- **Título**: Crear diagrama de flujo de comunicación
-- **Descripción**: Documentar visualmente los principales flujos de comunicación en la aplicación
-- **Archivos a crear**: docs/communication-flow.md
-- **Archivos de referencia**: docs/component-communication.md
-- **Dependencias**: Subtareas 5.5, 5.6
-- **Beneficio esperado**: Documentación visual que facilita la comprensión de cómo interactúan los componentes
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## 🔶 TAREA 6: Generalización de Componentes para Mayor Reutilización
-
-### 📌 Título
-Refactorización de componentes para hacerlos más genéricos y reutilizables
-
-### 📝 Descripción
-Identificar y refactorizar componentes específicos para hacerlos más genéricos y reutilizables, aplicando patrones de diseño como renderless components, scoped slots y composition functions.
-
-### 🏗️ Archivos a modificar o crear
-- VideoStream.vue
+- Archivos .env
+**Dependencias:** Subtareas 1.1 a 1.7
+**Beneficio esperado:** Facilitar la comprensión del sistema para nuevos desarrolladores y reducir errores de configuración.
+
+### Subtarea 1.9: Actualización de .gitignore
+**Descripción:** Asegurar que los archivos de configuración local estén excluidos del control de versiones.
+**Archivos a modificar o crear:**
+- .gitignore
+**Archivos de referencia:**
+- `.env.development`
+- `.env.production`
+**Dependencias:** Subtarea 1.1
+**Beneficio esperado:** Protección de configuraciones sensibles y flexibilidad para configuraciones personales.
+
+### Subtarea 1.10: Creación de archivo de configuración de ejemplo
+**Descripción:** Crear un archivo .env.example con valores de ejemplo para guiar a los desarrolladores.
+**Archivos a modificar o crear:**
+- `.env.example` (Crear)
+**Archivos de referencia:**
+- `.env.development`
+**Dependencias:** Subtarea 1.2
+**Beneficio esperado:** Facilitar la configuración inicial para nuevos desarrolladores.
+
+## 📌 TAREA 2: Resolución de Duplicación de Componentes
+
+**Descripción:** Eliminar la duplicación del componente VideoControls.vue, unificando sus funcionalidades en una única ubicación coherente.
+
+**Beneficio esperado:** Mayor claridad en la estructura del proyecto, eliminación de confusión sobre qué componente usar, y prevención de desincronización entre versiones duplicadas.
+
+### Subtarea 2.1: Análisis de componentes duplicados
+**Descripción:** Realizar un análisis detallado de las diferencias entre las dos versiones de VideoControls.vue para identificar las funcionalidades únicas de cada una.
+**Archivos a modificar o crear:** Ninguno (solo análisis)
+**Archivos de referencia:**
 - VideoControls.vue
-- src/components/ui/ (nuevo directorio para componentes UI genéricos)
-- src/components/ui/Button.vue (nuevo)
-- src/components/ui/Card.vue (nuevo)
-- src/components/ui/Icon.vue (nuevo)
-
-### 📂 Archivos de referencia
-- src/components existentes
-- Guías de mejores prácticas de Vue
-
-### 🔗 Dependencias
-Esta tarea se beneficiaría después de implementar el patrón Container/Presentational (Tarea 2).
-
-### 🎯 Beneficio esperado
-Mayor reutilización de código, menos duplicación, facilidad para implementar nuevas características con componentes existentes.
-
-#### Subtarea 6.1: Identificación de oportunidades de generalización
-- **Título**: Analizar componentes para detectar patrones comunes
-- **Descripción**: Revisar los componentes existentes para identificar patrones de UI y comportamiento que podrían generalizarse
-- **Archivos a analizar**: Todos los componentes .vue
-- **Archivos de referencia**: Ninguno
-- **Dependencias**: Ninguna
-- **Beneficio esperado**: Mapa de oportunidades para crear componentes genéricos reutilizables
-
-#### Subtarea 6.2: Creación de componente Button genérico
-- **Título**: Implementar componente Button reutilizable
-- **Descripción**: Crear un componente Button que admita diferentes estilos, tamaños y comportamientos
-- **Archivos a crear**: src/components/ui/Button.vue
-- **Archivos de referencia**: Componentes existentes que usan botones
-- **Dependencias**: Subtarea 6.1
-- **Beneficio esperado**: Consistencia visual y comportamental en todos los botones de la aplicación
-
-#### Subtarea 6.3: Creación de componente Card genérico
-- **Título**: Implementar componente Card reutilizable
-- **Descripción**: Crear un componente Card que pueda usarse para contener diferentes tipos de contenido manteniendo un estilo consistente
-- **Archivos a crear**: src/components/ui/Card.vue
-- **Archivos de referencia**: Componentes existentes que usan estructuras tipo card
-- **Dependencias**: Subtarea 6.1
-- **Beneficio esperado**: Contenedores de contenido consistentes en toda la aplicación
-
-#### Subtarea 6.4: Creación de componente Icon genérico
-- **Título**: Implementar componente Icon reutilizable
-- **Descripción**: Crear un componente Icon que pueda mostrar diferentes iconos según un parámetro
-- **Archivos a crear**: src/components/ui/Icon.vue
-- **Archivos de referencia**: Componentes existentes que usan iconos
-- **Dependencias**: Subtarea 6.1
-- **Beneficio esperado**: Sistema de iconos consistente y fácil de usar
-
-#### Subtarea 6.5: Refactorización de VideoControls para usar componentes UI genéricos
-- **Título**: Actualizar VideoControls con componentes UI genéricos
-- **Descripción**: Refactorizar VideoControls para utilizar los nuevos componentes Button e Icon genéricos
-- **Archivos a modificar**: VideoControls.vue
-- **Archivos de referencia**: src/components/ui/Button.vue, src/components/ui/Icon.vue
-- **Dependencias**: Subtareas 6.2, 6.4
-- **Beneficio esperado**: Controles de video más mantenibles y consistentes con el resto de la UI
-
-#### Subtarea 6.6: Generalización de VideoStream
-- **Título**: Hacer VideoStream más genérico y configurable
-- **Descripción**: Refactorizar VideoStream para que sea más configurable y pueda mostrar diferentes tipos de contenido de video
-- **Archivos a modificar**: VideoStream.vue
-- **Archivos de referencia**: Ninguno
-- **Dependencias**: Subtarea 6.1
-- **Beneficio esperado**: Componente de visualización de video más flexible y reutilizable
-
-#### Subtarea 6.7: Implementación de renderless components para comportamientos complejos
-- **Título**: Crear componentes sin renderizado para lógica reutilizable
-- **Descripción**: Implementar componentes renderless para encapsular comportamientos complejos como drag-and-drop, gestión de formularios, etc.
-- **Archivos a crear**: src/components/renderless/ (directorio)
-- **Archivos de referencia**: Documentación de Vue sobre renderless components
-- **Dependencias**: Subtarea 6.1
-- **Beneficio esperado**: Reutilización de comportamientos complejos en diferentes componentes
-
-#### Subtarea 6.8: Documentación de la biblioteca de componentes
-- **Título**: Crear documentación para la biblioteca de componentes UI
-- **Descripción**: Documentar cómo usar los componentes genéricos, incluyendo props, eventos y ejemplos
-- **Archivos a crear**: docs/ui-components.md
-- **Archivos de referencia**: src/components/ui/*.vue
-- **Dependencias**: Subtareas 6.2 - 6.7
-- **Beneficio esperado**: Facilitar la adopción y uso correcto de los componentes genéricos
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## 🔶 TAREA 7: Implementación de Sistema de Rutas (Vue Router)
-
-### 📌 Título
-Integración de Vue Router para navegación entre vistas
-
-### 📝 Descripción
-Incorporar Vue Router para permitir la navegación entre diferentes vistas de la aplicación, facilitando la escalabilidad y división de la aplicación en módulos funcionales.
-
-### 🏗️ Archivos a modificar o crear
-- package.json (agregar dependencia vue-router)
-- src/router/index.js (nuevo)
-- src/views/ (nuevo directorio para vistas)
-- App.vue
-- main.js
-
-### 📂 Archivos de referencia
-- HomePage.vue
-- Documentación oficial de Vue Router
-
-### 🔗 Dependencias
-Esta tarea debería realizarse temprano en el proceso de refactorización, idealmente después de la Tarea 1.
-
-### 🎯 Beneficio esperado
-Capacidad para escalar la aplicación con múltiples vistas, mejor organización del código por funcionalidad, y navegación fluida sin recargas de página.
-
-#### Subtarea 7.1: Instalación y configuración básica de Vue Router
-- **Título**: Instalar Vue Router y configurar estructura básica
-- **Descripción**: Agregar Vue Router como dependencia del proyecto y crear la estructura básica del router
-- **Archivos a modificar**: package.json
-- **Archivos a crear**: src/router/index.js
-- **Archivos de referencia**: Documentación de Vue Router
-- **Dependencias**: Ninguna
-- **Beneficio esperado**: Infraestructura básica para la navegación entre vistas
-
-#### Subtarea 7.2: Creación del directorio de vistas
-- **Título**: Reorganizar componentes en vistas y componentes
-- **Descripción**: Crear un directorio de vistas y mover los componentes de nivel superior (como HomePage) a este directorio
-- **Archivos a crear**: src/views/HomePage.vue (o HomeView.vue)
-- **Archivos a modificar**: Organización de archivos existentes
-- **Archivos de referencia**: HomePage.vue
-- **Dependencias**: Subtarea 7.1
-- **Beneficio esperado**: Separación clara entre vistas principales y componentes reutilizables
-
-#### Subtarea 7.3: Definición de rutas iniciales
-- **Título**: Configurar rutas iniciales de la aplicación
-- **Descripción**: Definir las rutas iniciales en el router, incluyendo la página principal y posibles nuevas páginas
-- **Archivos a modificar**: src/router/index.js
-- **Archivos de referencia**: src/views/
-- **Dependencias**: Subtarea 7.2
-- **Beneficio esperado**: Estructura de navegación básica de la aplicación
-
-#### Subtarea 7.4: Integración del router en la aplicación
-- **Título**: Conectar Vue Router con la aplicación
-- **Descripción**: Modificar main.js para usar el router y actualizar App.vue para incluir RouterView
-- **Archivos a modificar**: src/main.js, App.vue
-- **Archivos de referencia**: src/router/index.js
-- **Dependencias**: Subtarea 7.3
-- **Beneficio esperado**: Router funcionando correctamente en la aplicación
-
-#### Subtarea 7.5: Implementación de navegación
-- **Título**: Crear componente de navegación con RouterLink
-- **Descripción**: Desarrollar un componente de navegación que utilice RouterLink para la navegación entre vistas
-- **Archivos a crear/modificar**: src/components/Navigation.vue
-- **Archivos a modificar**: App.vue
-- **Archivos de referencia**: src/router/index.js
-- **Dependencias**: Subtarea 7.4
-- **Beneficio esperado**: Interfaz de usuario para la navegación entre diferentes secciones
-
-#### Subtarea 7.6: Configuración de rutas con parámetros
-- **Título**: Implementar rutas con parámetros dinámicos
-- **Descripción**: Configurar rutas que puedan aceptar parámetros para mostrar diferentes contenidos según el parámetro
-- **Archivos a modificar**: src/router/index.js
-- **Archivos a crear**: src/views/ (vistas adicionales que usan parámetros)
-- **Archivos de referencia**: Documentación de Vue Router sobre rutas dinámicas
-- **Dependencias**: Subtarea 7.4
-- **Beneficio esperado**: Capacidad para mostrar contenido dinámico basado en la URL
-
-#### Subtarea 7.7: Implementación de guardias de navegación
-- **Título**: Configurar guardias de navegación para proteger rutas
-- **Descripción**: Implementar guardias de navegación para controlar el acceso a ciertas rutas según el estado de la aplicación
-- **Archivos a modificar**: src/router/index.js
-- **Archivos de referencia**: Documentación de Vue Router sobre guardias
-- **Dependencias**: Subtarea 7.4
-- **Beneficio esperado**: Control de acceso a diferentes partes de la aplicación
-
-#### Subtarea 7.8: Configuración de lazy loading para rutas
-- **Título**: Implementar carga diferida de componentes de ruta
-- **Descripción**: Configurar las rutas para usar lazy loading, mejorando el rendimiento inicial de la aplicación
-- **Archivos a modificar**: src/router/index.js
-- **Archivos de referencia**: Documentación de Vue Router sobre lazy loading
-- **Dependencias**: Subtarea 7.4
-- **Beneficio esperado**: Mejor rendimiento inicial al cargar solo las vistas necesarias
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## 🔶 TAREA 8: Reorganización del Proyecto por Dominios Funcionales
-
-### 📌 Título
-Reestructuración del proyecto siguiendo una arquitectura orientada a dominios
-
-### 📝 Descripción
-Reorganizar la estructura de archivos del proyecto para agrupar los recursos por dominio funcional en lugar de por tipo, mejorando la cohesión y facilitando la navegación y mantenimiento del código.
-
-### 🏗️ Archivos a modificar o crear
-- Toda la estructura de directorios del proyecto
-
-### 📂 Archivos de referencia
+- VideoControls.vue
+**Dependencias:** Ninguna
+**Beneficio esperado:** Comprensión clara de las funcionalidades a preservar en el componente unificado.
+
+### Subtarea 2.2: Creación de componente unificado
+**Descripción:** Crear un componente unificado que combine todas las funcionalidades necesarias de ambas versiones.
+**Archivos a modificar o crear:**
+- VideoControls.vue (modificar o reemplazar)
+**Archivos de referencia:**
+- VideoControls.vue
+- VideoControls.vue
+**Dependencias:** Subtarea 2.1
+**Beneficio esperado:** Un único componente con todas las funcionalidades necesarias y un diseño cohesivo.
+
+### Subtarea 2.3: Identificación de importaciones
+**Descripción:** Identificar todos los archivos que importan cualquiera de las versiones duplicadas de VideoControls.
+**Archivos a modificar o crear:** Ninguno (solo análisis)
+**Archivos de referencia:**
+- Todo el proyecto (búsqueda de importaciones)
+**Dependencias:** Ninguna
+**Beneficio esperado:** Lista completa de archivos que necesitarán actualizaciones.
+
+### Subtarea 2.4: Actualización de importaciones
+**Descripción:** Actualizar todas las importaciones para que utilicen el componente unificado.
+**Archivos a modificar o crear:**
+- Todos los archivos identificados en la subtarea 2.3
+**Archivos de referencia:**
+- Lista de la subtarea 2.3
+**Dependencias:** Subtarea 2.2, Subtarea 2.3
+**Beneficio esperado:** Todas las referencias apuntan al componente unificado.
+
+### Subtarea 2.5: Eliminación del componente duplicado
+**Descripción:** Eliminar la versión redundante de VideoControls.vue una vez que ya no esté siendo referenciada.
+**Archivos a modificar o crear:**
+- VideoControls.vue (eliminar)
+**Archivos de referencia:** Ninguno
+**Dependencias:** Subtarea 2.4
+**Beneficio esperado:** Eliminación de la duplicación y confusión asociada.
+
+### Subtarea 2.6: Verificación de funcionalidad
+**Descripción:** Comprobar que la funcionalidad del sistema se mantiene intacta después de la unificación.
+**Archivos a modificar o crear:** Ninguno (solo verificación)
+**Archivos de referencia:**
+- Componentes que utilizan VideoControls
+**Dependencias:** Subtarea 2.5
+**Beneficio esperado:** Confirmación de que la unificación no ha introducido errores.
+
+## 📌 TAREA 3: Extracción de Lógica de Mediador a Composables Dedicados
+
+**Descripción:** Separar la lógica de mediación actualmente presente en componentes contenedores (especialmente HomeContainer.vue) en composables dedicados para mejorar la reutilización y testabilidad.
+
+**Beneficio esperado:** Mejor separación de responsabilidades, mayor reutilización de lógica, y componentes contenedores más simples y enfocados.
+
+### Subtarea 3.1: Análisis de responsabilidades del HomeContainer
+**Descripción:** Identificar y categorizar las diferentes responsabilidades y flujos de lógica presentes en HomeContainer.vue.
+**Archivos a modificar o crear:** Ninguno (solo análisis)
+**Archivos de referencia:**
+- `src/views/HomeContainer.vue`
+**Dependencias:** Ninguna
+**Beneficio esperado:** Comprensión clara de las distintas responsabilidades que deben extraerse.
+
+### Subtarea 3.2: Diseño de composables de mediación
+**Descripción:** Diseñar la estructura e interfaces de los composables que contendrán la lógica de mediación extraída.
+**Archivos a modificar o crear:** Ninguno (solo diseño)
+**Archivos de referencia:**
+- `src/views/HomeContainer.vue`
+- Composables existentes como modelo
+**Dependencias:** Subtarea 3.1
+**Beneficio esperado:** Plan claro para la separación y organización de la lógica.
+
+### Subtarea 3.3: Creación de composable para gestión de flujo de vídeo
+**Descripción:** Crear un composable dedicado para gestionar el flujo de video, incluyendo inicialización, gestión de errores y comunicación entre componentes.
+**Archivos a modificar o crear:**
+- `src/composables/useVideoMediator.js` (Crear)
+**Archivos de referencia:**
+- `src/views/HomeContainer.vue`
+- useVideoStream.js
+**Dependencias:** Subtarea 3.2
+**Beneficio esperado:** Separación de la lógica de coordinación de video en un módulo reutilizable.
+
+### Subtarea 3.4: Creación de composable para gestión de estado UI
+**Descripción:** Crear un composable dedicado para gestionar el estado de la interfaz de usuario relacionado con los streams de video.
+**Archivos a modificar o crear:**
+- `src/composables/useVideoUIState.js` (Crear)
+**Archivos de referencia:**
+- `src/views/HomeContainer.vue`
+**Dependencias:** Subtarea 3.2
+**Beneficio esperado:** Separación clara entre la lógica de negocio y la gestión de estado UI.
+
+### Subtarea 3.5: Creación de composable para gestión de notificaciones
+**Descripción:** Crear un composable dedicado para la gestión centralizada de notificaciones y mensajes de error.
+**Archivos a modificar o crear:**
+- `src/composables/useNotificationManager.js` (Crear)
+**Archivos de referencia:**
+- `src/views/HomeContainer.vue`
+- notificationStore.js
+**Dependencias:** Subtarea 3.2
+**Beneficio esperado:** Sistema de notificaciones más coherente y reutilizable.
+
+### Subtarea 3.6: Refactorización de HomeContainer
+**Descripción:** Modificar HomeContainer.vue para utilizar los nuevos composables, simplificando significativamente su código.
+**Archivos a modificar o crear:**
+- `src/views/HomeContainer.vue`
+**Archivos de referencia:**
+- Composables creados en las subtareas 3.3, 3.4 y 3.5
+**Dependencias:** Subtareas 3.3, 3.4, 3.5
+**Beneficio esperado:** Componente contenedor más simple, legible y enfocado.
+
+### Subtarea 3.7: Adaptación de otros componentes contenedores
+**Descripción:** Identificar y modificar otros componentes contenedores que podrían beneficiarse de los nuevos composables.
+**Archivos a modificar o crear:**
+- Otros componentes contenedores identificados durante el análisis
+**Archivos de referencia:**
+- Composables creados en las subtareas 3.3, 3.4 y 3.5
+**Dependencias:** Subtareas 3.3, 3.4, 3.5
+**Beneficio esperado:** Mayor coherencia y reutilización en toda la aplicación.
+
+### Subtarea 3.8: Documentación de composables
+**Descripción:** Documentar la API y el propósito de cada nuevo composable de mediación.
+**Archivos a modificar o crear:**
+- Comentarios dentro de cada composable creado
+- Posible archivo de documentación dedicado
+**Archivos de referencia:**
+- Composables creados en las subtareas 3.3, 3.4 y 3.5
+**Dependencias:** Subtareas 3.3, 3.4, 3.5
+**Beneficio esperado:** Facilitar la comprensión y uso correcto de los nuevos composables.
+
+## 📌 TAREA 4: Completar Separación de Componentes Presentacionales y Contenedores
+
+**Descripción:** Asegurar que todos los componentes sigan consistentemente el patrón presentacional/contenedor, realizando una separación clara de responsabilidades.
+
+**Beneficio esperado:** Mayor coherencia arquitectónica, mejor testabilidad y componentes más mantenibles y reutilizables.
+
+### Subtarea 4.1: Auditoría de componentes actuales
+**Descripción:** Analizar todos los componentes existentes para identificar aquellos que mezclan responsabilidades presentacionales y de lógica.
+**Archivos a modificar o crear:** Ninguno (solo análisis)
+**Archivos de referencia:**
+- Todos los componentes en components
+- Todos los componentes en `src/views/`
+**Dependencias:** Ninguna
+**Beneficio esperado:** Lista completa de componentes que necesitan refactorización.
+
+### Subtarea 4.2: Establecimiento de criterios de separación
+**Descripción:** Definir criterios claros para distinguir entre componentes presentacionales y contenedores en el contexto específico del proyecto.
+**Archivos a modificar o crear:**
+- Posible archivo de documentación o guía de estilo
+**Archivos de referencia:**
+- Componentes existentes que ya siguen el patrón correctamente
+**Dependencias:** Subtarea 4.1
+**Beneficio esperado:** Guía clara para la separación de responsabilidades.
+
+### Subtarea 4.3: Separación de VideoStream
+**Descripción:** Refactorizar VideoStream.vue para separar lógica y presentación si es necesario.
+**Archivos a modificar o crear:**
+- VideoStream.vue (posible modificación)
+- Posible creación de nuevo componente presentacional
+**Archivos de referencia:**
+- VideoStream.vue
+**Dependencias:** Subtarea 4.2
+**Beneficio esperado:** Componente con responsabilidades claramente definidas.
+
+### Subtarea 4.4: Creación/separación de componentes presentacionales adicionales
+**Descripción:** Crear nuevos componentes presentacionales para cualquier lógica de UI que esté actualmente mezclada en componentes contenedores.
+**Archivos a modificar o crear:**
+- Nuevos componentes en presentational
+**Archivos de referencia:**
+- Componentes identificados en la subtarea 4.1
+**Dependencias:** Subtarea 4.2
+**Beneficio esperado:** Base de componentes presentacionales reutilizables.
+
+### Subtarea 4.5: Refactorización de componentes contenedores
+**Descripción:** Modificar los componentes contenedores para que utilicen los nuevos componentes presentacionales y se centren solo en la coordinación.
+**Archivos a modificar o crear:**
+- Componentes contenedores identificados en la subtarea 4.1
+**Archivos de referencia:**
+- Nuevos componentes presentacionales
+**Dependencias:** Subtarea 4.4
+**Beneficio esperado:** Componentes contenedores más limpios y enfocados.
+
+### Subtarea 4.6: Estandardización de la comunicación entre componentes
+**Descripción:** Establecer un patrón coherente para la comunicación entre componentes presentacionales y contenedores.
+**Archivos a modificar o crear:**
+- Componentes refactorizados en tareas anteriores
+**Archivos de referencia:**
+- Código existente con buenas prácticas
+**Dependencias:** Subtareas 4.3, 4.4, 4.5
+**Beneficio esperado:** Comunicación clara y consistente entre componentes.
+
+### Subtarea 4.7: Eliminación de componentes redundantes
+**Descripción:** Identificar y eliminar cualquier componente que se haya vuelto redundante tras la refactorización.
+**Archivos a modificar o crear:**
+- Posibles componentes a eliminar
+**Archivos de referencia:** Ninguno
+**Dependencias:** Subtareas 4.3, 4.4, 4.5
+**Beneficio esperado:** Codebase más limpio y mantenible.
+
+### Subtarea 4.8: Actualización de documentación de componentes
+**Descripción:** Actualizar o crear documentación clara sobre el propósito y uso de cada componente.
+**Archivos a modificar o crear:**
+- Comentarios en componentes
+- Posible archivo de documentación de componentes
+**Archivos de referencia:**
+- Componentes refactorizados
+**Dependencias:** Subtareas 4.3, 4.4, 4.5
+**Beneficio esperado:** Facilitar la comprensión y uso correcto de los componentes.
+
+## 📌 TAREA 5: Implementación de Inyección de Dependencias entre Servicios
+
+**Descripción:** Refactorizar los servicios para eliminar dependencias directas y facilitar la inyección de dependencias, mejorando la testabilidad y flexibilidad.
+
+**Beneficio esperado:** Servicios más desacoplados, mejor testabilidad, y mayor flexibilidad para cambiar implementaciones.
+
+### Subtarea 5.1: Análisis de dependencias entre servicios
+**Descripción:** Identificar todas las dependencias directas entre servicios en el proyecto.
+**Archivos a modificar o crear:** Ninguno (solo análisis)
+**Archivos de referencia:**
+- Todos los archivos en services
+**Dependencias:** Ninguna
+**Beneficio esperado:** Mapa claro de dependencias actuales entre servicios.
+
+### Subtarea 5.2: Diseño de interfaces para servicios
+**Descripción:** Definir interfaces claras para cada servicio que permitan la inyección de dependencias.
+**Archivos a modificar o crear:** Ninguno (solo diseño)
+**Archivos de referencia:**
+- Servicios existentes
+**Dependencias:** Subtarea 5.1
+**Beneficio esperado:** Plan claro para la refactorización con interfaces bien definidas.
+
+### Subtarea 5.3: Refactorización del servicio HTTP
+**Descripción:** Modificar el servicio HTTP para que pueda ser inyectado en otros servicios en lugar de ser importado directamente.
+**Archivos a modificar o crear:**
+- http.js
+**Archivos de referencia:**
+- http.js (versión actual)
+**Dependencias:** Subtarea 5.2
+**Beneficio esperado:** Servicio HTTP más flexible y desacoplado.
+
+### Subtarea 5.4: Refactorización del servicio de video
+**Descripción:** Modificar el servicio de video para recibir el servicio HTTP como dependencia inyectada.
+**Archivos a modificar o crear:**
+- videoService.js
+**Archivos de referencia:**
+- videoService.js (versión actual)
+- http.js (refactorizado)
+**Dependencias:** Subtarea 5.3
+**Beneficio esperado:** Servicio de video desacoplado del servicio HTTP específico.
+
+### Subtarea 5.5: Creación de factory para servicios
+**Descripción:** Implementar un patrón factory para la creación de instancias de servicios con sus dependencias.
+**Archivos a modificar o crear:**
+- `src/services/serviceFactory.js` (Crear)
+**Archivos de referencia:**
+- Servicios refactorizados
+**Dependencias:** Subtareas 5.3, 5.4
+**Beneficio esperado:** Punto centralizado para la creación y configuración de servicios.
+
+### Subtarea 5.6: Adaptación de componentes para usar servicios inyectados
+**Descripción:** Modificar los componentes y composables que utilizan servicios para obtenerlos a través del factory.
+**Archivos a modificar o crear:**
+- Componentes y composables que utilizan servicios directamente
+**Archivos de referencia:**
+- `src/services/serviceFactory.js`
+**Dependencias:** Subtarea 5.5
+**Beneficio esperado:** Componentes desacoplados de implementaciones específicas de servicios.
+
+### Subtarea 5.7: Creación de mocks de servicios para pruebas
+**Descripción:** Crear versiones mock de los servicios que faciliten las pruebas de componentes y otros servicios.
+**Archivos a modificar o crear:**
+- `src/services/mocks/` (directorio a crear)
+- Archivos mock para cada servicio
+**Archivos de referencia:**
+- Interfaces de servicios diseñadas en la subtarea 5.2
+**Dependencias:** Subtarea 5.2
+**Beneficio esperado:** Facilitar la creación de pruebas unitarias para componentes que dependen de servicios.
+
+### Subtarea 5.8: Documentación del sistema de inyección de dependencias
+**Descripción:** Documentar el nuevo sistema de inyección de dependencias y cómo debe utilizarse.
+**Archivos a modificar o crear:**
+- Comentarios en archivos relevantes
+- Posible archivo de documentación dedicado
+**Archivos de referencia:**
+- `src/services/serviceFactory.js`
+- Servicios refactorizados
+**Dependencias:** Subtareas 5.3, 5.4, 5.5
+**Beneficio esperado:** Facilitar la comprensión y uso correcto del nuevo sistema.
+
+## 📌 TAREA 6: Restructuración del Proyecto por Dominios Funcionales
+
+**Descripción:** Reorganizar la estructura de carpetas para seguir una organización basada en dominios o características, mejorando la escalabilidad y la localización de archivos relacionados.
+
+**Beneficio esperado:** Mejor modularidad, facilidad para entender y navegar el proyecto, y preparación para un crecimiento escalonado.
+
+### Subtarea 6.1: Análisis de dominios funcionales
+**Descripción:** Identificar los diferentes dominios funcionales presentes en la aplicación.
+**Archivos a modificar o crear:** Ninguno (solo análisis)
+**Archivos de referencia:**
+- Toda la estructura del proyecto
+**Dependencias:** Ninguna
+**Beneficio esperado:** Mapa claro de los dominios funcionales para la reorganización.
+
+### Subtarea 6.2: Diseño de la nueva estructura de carpetas
+**Descripción:** Definir la nueva estructura de carpetas basada en dominios funcionales.
+**Archivos a modificar o crear:** Ninguno (solo diseño)
+**Archivos de referencia:**
 - Estructura actual del proyecto
-- Guías de mejores prácticas de Vue
+**Dependencias:** Subtarea 6.1
+**Beneficio esperado:** Plan claro para la reorganización del proyecto.
 
-### 🔗 Dependencias
-Esta tarea debería realizarse después de tener una comprensión completa del sistema y preferiblemente después de implementar las mejoras arquitectónicas principales.
+### Subtarea 6.3: Creación de la estructura para el dominio de video
+**Descripción:** Crear la estructura de carpetas para el dominio de video y mover los archivos relacionados.
+**Archivos a modificar o crear:**
+- `src/features/video/` (directorio a crear)
+- Subdirectorios para componentes, composables, servicios, etc.
+**Archivos de referencia:**
+- Archivos existentes relacionados con video
+**Dependencias:** Subtarea 6.2
+**Beneficio esperado:** Agrupación coherente de toda la funcionalidad relacionada con video.
 
-### 🎯 Beneficio esperado
-Mejor organización del código, mayor facilidad para encontrar y modificar archivos relacionados, y mejor escalabilidad para el crecimiento futuro del proyecto.
+### Subtarea 6.4: Creación de la estructura para el dominio de notificaciones
+**Descripción:** Crear la estructura de carpetas para el dominio de notificaciones y mover los archivos relacionados.
+**Archivos a modificar o crear:**
+- `src/features/notifications/` (directorio a crear)
+- Subdirectorios para componentes, composables, servicios, etc.
+**Archivos de referencia:**
+- Archivos existentes relacionados con notificaciones
+**Dependencias:** Subtarea 6.2
+**Beneficio esperado:** Agrupación coherente de toda la funcionalidad relacionada con notificaciones.
 
-#### Subtarea 8.1: Análisis de dominios funcionales
-- **Título**: Identificar dominios funcionales de la aplicación
-- **Descripción**: Analizar la aplicación para identificar los principales dominios funcionales (video, configuración, notificaciones, etc.)
-- **Archivos a analizar**: Todo el proyecto
-- **Archivos de referencia**: Ninguno
-- **Dependencias**: Ninguna
-- **Beneficio esperado**: Mapa claro de dominios funcionales para guiar la reorganización
+### Subtarea 6.5: Creación de la estructura para el dominio de configuración
+**Descripción:** Crear la estructura de carpetas para el dominio de configuración y mover los archivos relacionados.
+**Archivos a modificar o crear:**
+- `src/features/config/` (directorio a crear)
+- Subdirectorios para componentes, composables, servicios, etc.
+**Archivos de referencia:**
+- Archivos existentes relacionados con configuración
+**Dependencias:** Subtarea 6.2
+**Beneficio esperado:** Agrupación coherente de toda la funcionalidad relacionada con configuración.
 
-#### Subtarea 8.2: Diseño de estructura de directorios por dominio
-- **Título**: Crear plan detallado de nueva estructura de directorios
-- **Descripción**: Diseñar una nueva estructura de directorios basada en dominios funcionales, documentando la ubicación prevista para cada archivo
-- **Archivos a crear**: docs/project-structure.md
-- **Archivos de referencia**: Resultado del análisis de la subtarea 8.1
-- **Dependencias**: Subtarea 8.1
-- **Beneficio esperado**: Plan claro para la reorganización física de archivos
+### Subtarea 6.6: Creación de una carpeta shared para componentes y utilidades comunes
+**Descripción:** Crear una estructura para elementos compartidos entre dominios funcionales.
+**Archivos a modificar o crear:**
+- `src/shared/` (directorio a crear)
+- Subdirectorios para componentes, composables, servicios, etc.
+**Archivos de referencia:**
+- Componentes y utilidades comunes existentes
+**Dependencias:** Subtarea 6.2
+**Beneficio esperado:** Separación clara entre código específico de dominio y código compartido.
 
-#### Subtarea 8.3: Creación de estructura base de directorios
-- **Título**: Implementar estructura base de directorios
-- **Descripción**: Crear la estructura base de directorios según el plan, sin mover archivos aún
-- **Archivos a crear**: Nuevos directorios según el plan
-- **Archivos de referencia**: docs/project-structure.md
-- **Dependencias**: Subtarea 8.2
-- **Beneficio esperado**: Estructura física lista para la migración de archivos
+### Subtarea 6.7: Actualización de importaciones
+**Descripción:** Actualizar todas las importaciones en el proyecto para reflejar la nueva estructura de carpetas.
+**Archivos a modificar o crear:**
+- Todos los archivos que contienen importaciones
+**Archivos de referencia:**
+- Nueva estructura de carpetas
+**Dependencias:** Subtareas 6.3, 6.4, 6.5, 6.6
+**Beneficio esperado:** Proyecto funcional con la nueva estructura sin errores de importación.
 
-#### Subtarea 8.4: Migración de dominio de video
-- **Título**: Reorganizar archivos relacionados con el dominio de video
-- **Descripción**: Mover componentes, composables, stores y servicios relacionados con la funcionalidad de video a su directorio de dominio
-- **Archivos a mover**: Archivos relacionados con video
-- **Archivos de referencia**: docs/project-structure.md
-- **Dependencias**: Subtarea 8.3
-- **Beneficio esperado**: Cohesión de archivos relacionados con el procesamiento de video
+### Subtarea 6.8: Actualización de la configuración de rutas
+**Descripción:** Actualizar la configuración de rutas para reflejar la nueva estructura de carpetas.
+**Archivos a modificar o crear:**
+- `src/router/index.js`
+**Archivos de referencia:**
+- Nueva ubicación de los componentes de vista
+**Dependencias:** Subtareas 6.3, 6.4, 6.5, 6.6
+**Beneficio esperado:** Navegación funcional con la nueva estructura.
 
-#### Subtarea 8.5: Migración de dominio de configuración
-- **Título**: Reorganizar archivos relacionados con configuración
-- **Descripción**: Mover componentes, composables, stores y servicios relacionados con la configuración a su directorio de dominio
-- **Archivos a mover**: Archivos relacionados con configuración
-- **Archivos de referencia**: docs/project-structure.md
-- **Dependencias**: Subtarea 8.3
-- **Beneficio esperado**: Cohesión de archivos relacionados con la configuración del sistema
+### Subtarea 6.9: Creación de archivos barrel (index.js) para cada dominio
+**Descripción:** Crear archivos index.js en cada dominio para facilitar las importaciones.
+**Archivos a modificar o crear:**
+- `src/features/video/index.js`
+- `src/features/notifications/index.js`
+- `src/features/config/index.js`
+- `src/shared/index.js`
+**Archivos de referencia:**
+- Contenido de cada dominio
+**Dependencias:** Subtareas 6.3, 6.4, 6.5, 6.6
+**Beneficio esperado:** Importaciones más limpias y mejor encapsulación de dominios.
 
-#### Subtarea 8.6: Migración de dominio de notificaciones
-- **Título**: Reorganizar archivos relacionados con notificaciones
-- **Descripción**: Mover componentes, composables, stores y servicios relacionados con las notificaciones a su directorio de dominio
-- **Archivos a mover**: Archivos relacionados con notificaciones
-- **Archivos de referencia**: docs/project-structure.md
-- **Dependencias**: Subtarea 8.3
-- **Beneficio esperado**: Cohesión de archivos relacionados con el sistema de notificaciones
+### Subtarea 6.10: Actualización de documentación de estructura
+**Descripción:** Documentar la nueva estructura de carpetas y las convenciones de organización.
+**Archivos a modificar o crear:**
+- README.md o nuevo archivo de documentación
+**Archivos de referencia:**
+- Nueva estructura del proyecto
+**Dependencias:** Subtareas 6.3, 6.4, 6.5, 6.6
+**Beneficio esperado:** Facilitar la comprensión de la nueva organización para todos los desarrolladores.
 
-#### Subtarea 8.7: Creación de directorio shared para recursos compartidos
-- **Título**: Implementar estructura para recursos compartidos
-- **Descripción**: Crear un directorio shared para componentes, utilidades y otros recursos utilizados por múltiples dominios
-- **Archivos a crear/mover**: src/shared/ y subdirectorios
-- **Archivos de referencia**: docs/project-structure.md
-- **Dependencias**: Subtarea 8.3
-- **Beneficio esperado**: Organización clara de recursos compartidos entre dominios
+## 📌 TAREA 7: Implementación de TypeScript
 
-#### Subtarea 8.8: Actualización de importaciones
-- **Título**: Corregir todas las importaciones tras la reorganización
-- **Descripción**: Actualizar todas las rutas de importación en el código para reflejar la nueva estructura de directorios
-- **Archivos a modificar**: Todos los archivos con importaciones
-- **Archivos de referencia**: docs/project-structure.md
-- **Dependencias**: Subtareas 8.4 - 8.7
-- **Beneficio esperado**: Proyecto funcional con la nueva estructura organizada por dominio
+**Descripción:** Migrar progresivamente el proyecto a TypeScript para mejorar el tipado, la detección temprana de errores y la documentación del código.
+
+**Beneficio esperado:** Código más robusto, mejor experiencia de desarrollo con autocompletado, y refactorizaciones más seguras.
+
+### Subtarea 7.1: Configuración inicial de TypeScript
+**Descripción:** Configurar TypeScript en el proyecto y establecer las opciones de compilación adecuadas.
+**Archivos a modificar o crear:**
+- `tsconfig.json` (Crear)
+- package.json (Modificar para agregar dependencias)
+**Archivos de referencia:**
+- Documentación de TypeScript y Vue
+**Dependencias:** Ninguna
+**Beneficio esperado:** Entorno listo para comenzar la migración a TypeScript.
+
+### Subtarea 7.2: Creación de tipos para el estado de los stores
+**Descripción:** Definir interfaces TypeScript para el estado de cada store (Pinia).
+**Archivos a modificar o crear:**
+- `src/stores/types.ts` (Crear)
+**Archivos de referencia:**
+- videoStore.js
+- notificationStore.js
+- configStore.js
+**Dependencias:** Subtarea 7.1
+**Beneficio esperado:** Tipos claros para los estados de los stores, facilitando su uso correcto.
+
+### Subtarea 7.3: Migración de los stores a TypeScript
+**Descripción:** Convertir los archivos de stores de JavaScript a TypeScript utilizando los tipos definidos.
+**Archivos a modificar o crear:**
+- `src/stores/videoStore.ts` (Crear/Modificar)
+- `src/stores/notificationStore.ts` (Crear/Modificar)
+- `src/stores/configStore.ts` (Crear/Modificar)
+**Archivos de referencia:**
+- `src/stores/types.ts`
+- Versiones JavaScript existentes
+**Dependencias:** Subtarea 7.2
+**Beneficio esperado:** Stores con tipos fuertes que facilitan su uso correcto.
+
+### Subtarea 7.4: Creación de tipos para las props de componentes
+**Descripción:** Definir interfaces TypeScript para las props de los componentes presentacionales.
+**Archivos a modificar o crear:**
+- `src/components/presentational/types.ts` (Crear)
+**Archivos de referencia:**
+- Componentes presentacionales existentes
+**Dependencias:** Subtarea 7.1
+**Beneficio esperado:** Documentación clara de las props esperadas por cada componente.
+
+### Subtarea 7.5: Migración de composables a TypeScript
+**Descripción:** Convertir los composables de JavaScript a TypeScript con tipos explícitos.
+**Archivos a modificar o crear:**
+- Versiones TypeScript de cada composable
+**Archivos de referencia:**
+- Versiones JavaScript existentes
+**Dependencias:** Subtarea 7.1
+**Beneficio esperado:** Composables con tipos claros para facilitar su uso correcto.
+
+### Subtarea 7.6: Migración de servicios a TypeScript
+**Descripción:** Convertir los servicios de JavaScript a TypeScript con interfaces explícitas.
+**Archivos a modificar o crear:**
+- Versiones TypeScript de cada servicio
+**Archivos de referencia:**
+- Versiones JavaScript existentes
+**Dependencias:** Subtarea 7.1
+**Beneficio esperado:** Servicios con contratos claros y tipos fuertes.
+
+### Subtarea 7.7: Migración de componentes presentacionales a TypeScript
+**Descripción:** Convertir los componentes presentacionales de JavaScript a TypeScript utilizando los tipos definidos.
+**Archivos a modificar o crear:**
+- Versiones TypeScript de cada componente presentacional
+**Archivos de referencia:**
+- `src/components/presentational/types.ts`
+- Versiones JavaScript existentes
+**Dependencias:** Subtarea 7.4
+**Beneficio esperado:** Componentes presentacionales con props y eventos tipados.
+
+### Subtarea 7.8: Migración de componentes contenedores a TypeScript
+**Descripción:** Convertir los componentes contenedores de JavaScript a TypeScript.
+**Archivos a modificar o crear:**
+- Versiones TypeScript de cada componente contenedor
+**Archivos de referencia:**
+- Versiones JavaScript existentes
+**Dependencias:** Subtareas 7.3, 7.5, 7.6, 7.7
+**Beneficio esperado:** Componentes contenedores con tipos fuertes para una coordinación más segura.
+
+### Subtarea 7.9: Actualización de configuración de Vue Router
+**Descripción:** Migrar la configuración de Vue Router a TypeScript con tipos para rutas.
+**Archivos a modificar o crear:**
+- `src/router/index.ts` (Crear/Modificar)
+**Archivos de referencia:**
+- `src/router/index.js` (versión existente)
+**Dependencias:** Subtarea 7.1
+**Beneficio esperado:** Configuración de rutas más segura y con mejor documentación.
+
+### Subtarea 7.10: Documentación de la migración a TypeScript
+**Descripción:** Documentar el proceso de migración a TypeScript y las convenciones adoptadas.
+**Archivos a modificar o crear:**
+- README.md o nuevo archivo dedicado a TypeScript
+**Archivos de referencia:**
+- Archivos migrados a TypeScript
+**Dependencias:** Subtareas anteriores de migración
+**Beneficio esperado:** Facilitar la comprensión y mantenimiento de la base de código TypeScript.
+
+## 📌 TAREA 8: Optimización de Rendimiento y Carga
+
+**Descripción:** Implementar mejoras de rendimiento, como lazy loading para componentes grandes y optimización de carga de recursos.
+
+**Beneficio esperado:** Mejor experiencia de usuario con tiempos de carga más rápidos y respuesta más fluida.
+
+### Subtarea 8.1: Análisis de rendimiento actual
+**Descripción:** Realizar un análisis de rendimiento para identificar puntos críticos y oportunidades de mejora.
+**Archivos a modificar o crear:** Ninguno (solo análisis)
+**Archivos de referencia:**
+- Toda la aplicación
+**Dependencias:** Ninguna
+**Beneficio esperado:** Comprensión clara de los problemas de rendimiento actuales.
+
+### Subtarea 8.2: Implementación de lazy loading para rutas
+**Descripción:** Configurar el lazy loading para las rutas principales de la aplicación.
+**Archivos a modificar o crear:**
+- `src/router/index.js`
+**Archivos de referencia:**
+- Rutas actuales
+**Dependencias:** Ninguna
+**Beneficio esperado:** Carga más rápida del código inicial de la aplicación.
+
+### Subtarea 8.3: Implementación de lazy loading para componentes pesados
+**Descripción:** Configurar la carga dinámica para componentes grandes que no son inmediatamente necesarios.
+**Archivos a modificar o crear:**
+- Componentes identificados como candidatos para lazy loading
+**Archivos de referencia:**
+- Análisis de rendimiento de la subtarea 8.1
+**Dependencias:** Subtarea 8.1
+**Beneficio esperado:** Mejor rendimiento de carga inicial y menor uso de memoria.
+
+### Subtarea 8.4: Optimización de carga de recursos de video
+**Descripción:** Mejorar la estrategia de carga y manejo de recursos de video para reducir el consumo de ancho de banda y memoria.
+**Archivos a modificar o crear:**
+- useVideoStream.js
+- Otros archivos relacionados con video
+**Archivos de referencia:**
+- Código actual de gestión de video
+**Dependencias:** Ninguna
+**Beneficio esperado:** Mejor rendimiento en la reproducción y procesamiento de video.
+
+### Subtarea 8.5: Implementación de técnicas de memoización
+**Descripción:** Aplicar técnicas de memoización para cálculos costosos o repetitivos.
+**Archivos a modificar o crear:**
+- Composables y funciones que realizan cálculos costosos
+**Archivos de referencia:**
+- Análisis de rendimiento de la subtarea 8.1
+**Dependencias:** Subtarea 8.1
+**Beneficio esperado:** Reducción de cálculos redundantes y mejor rendimiento.
+
+### Subtarea 8.6: Optimización de reactividad
+**Descripción:** Revisar y optimizar el uso de la reactividad de Vue para evitar actualizaciones innecesarias.
+**Archivos a modificar o crear:**
+- Componentes con problemas de rendimiento identificados
+**Archivos de referencia:**
+- Análisis de rendimiento de la subtarea 8.1
+**Dependencias:** Subtarea 8.1
+**Beneficio esperado:** Menos re-renderizados innecesarios y mejor rendimiento general.
+
+### Subtarea 8.7: Implementación de estrategias de caché
+**Descripción:** Implementar estrategias de caché para recursos frecuentemente utilizados.
+**Archivos a modificar o crear:**
+- `src/services/cacheService.js` (Crear)
+- Servicios que podrían beneficiarse de caché
+**Archivos de referencia:**
+- Servicios existentes
+**Dependencias:** Ninguna
+**Beneficio esperado:** Reducción de peticiones redundantes y mejor rendimiento.
+
+### Subtarea 8.8: Documentación de mejoras de rendimiento
+**Descripción:** Documentar las técnicas de optimización implementadas y su impacto.
+**Archivos a modificar o crear:**
+- Documentación en comentarios de código
+- Posible archivo dedicado a rendimiento
+**Archivos de referencia:**
+- Mejoras implementadas
+**Dependencias:** Subtareas de optimización anteriores
+**Beneficio esperado:** Conocimiento compartido sobre las optimizaciones y su mantenimiento.
+
+## 📌 TAREA 9: Mejora del Sistema de Manejo de Errores
+
+**Descripción:** Unificar y mejorar el sistema de manejo de errores para proporcionar mejor feedback a los usuarios y facilitar la depuración.
+
+**Beneficio esperado:** Mejor experiencia de usuario ante errores, facilidad para diagnosticar problemas, y mayor robustez del sistema.
+
+### Subtarea 9.1: Análisis del manejo de errores actual
+**Descripción:** Revisar el sistema actual de manejo de errores e identificar inconsistencias y oportunidades de mejora.
+**Archivos a modificar o crear:** Ninguno (solo análisis)
+**Archivos de referencia:**
+- useErrorHandling.js
+- Código que maneja errores en componentes y servicios
+**Dependencias:** Ninguna
+**Beneficio esperado:** Comprensión clara de las deficiencias actuales en el manejo de errores.
+
+### Subtarea 9.2: Diseño de una estrategia unificada de manejo de errores
+**Descripción:** Desarrollar una estrategia coherente para capturar, procesar y mostrar errores.
+**Archivos a modificar o crear:** Ninguno (solo diseño)
+**Archivos de referencia:**
+- Análisis de la subtarea 9.1
+**Dependencias:** Subtarea 9.1
+**Beneficio esperado:** Plan claro para la implementación de un sistema consistente.
+
+### Subtarea 9.3: Creación de una jerarquía de tipos de error
+**Descripción:** Definir una jerarquía clara de tipos de error específicos para diferentes situaciones.
+**Archivos a modificar o crear:**
+- `src/errors/index.js` (Crear)
+**Archivos de referencia:**
+- Errores actuales en el sistema
+**Dependencias:** Subtarea 9.2
+**Beneficio esperado:** Tipificación clara de errores para un manejo más preciso.
+
+### Subtarea 9.4: Implementación de un gestor central de errores
+**Descripción:** Crear un gestor centralizado que procese todos los errores y determine su manejo apropiado.
+**Archivos a modificar o crear:**
+- `src/services/errorService.js` (Crear)
+**Archivos de referencia:**
+- useErrorHandling.js
+**Dependencias:** Subtarea 9.3
+**Beneficio esperado:** Punto único para la gestión coherente de errores.
+
+### Subtarea 9.5: Integración con el sistema de notificaciones
+**Descripción:** Mejorar la integración entre el gestor de errores y el sistema de notificaciones para mostrar mensajes apropiados al usuario.
+**Archivos a modificar o crear:**
+- `src/services/errorService.js`
+- notificationStore.js
+**Archivos de referencia:**
+- Sistema actual de notificaciones
+**Dependencias:** Subtarea 9.4
+**Beneficio esperado:** Presentación coherente y amigable de errores al usuario.
+
+### Subtarea 9.6: Implementación de política de reintentos
+**Descripción:** Desarrollar una política de reintentos automáticos para operaciones propensas a fallos transitorios.
+**Archivos a modificar o crear:**
+- `src/services/retryService.js` (Crear)
+**Archivos de referencia:**
+- Servicios que realizan operaciones de red
+**Dependencias:** Subtarea 9.4
+**Beneficio esperado:** Mayor resiliencia ante fallos temporales.
+
+### Subtarea 9.7: Adaptación de componentes para usar el nuevo sistema
+**Descripción:** Modificar los componentes para que utilicen el nuevo sistema de manejo de errores.
+**Archivos a modificar o crear:**
+- Componentes que manejan errores actualmente
+**Archivos de referencia:**
+- `src/services/errorService.js`
+**Dependencias:** Subtarea 9.4
+**Beneficio esperado:** Manejo de errores coherente en toda la aplicación.
+
+### Subtarea 9.8: Implementación de logging de errores
+**Descripción:** Configurar un sistema de logging que registre errores para su análisis posterior.
+**Archivos a modificar o crear:**
+- `src/services/logService.js` (Crear)
+**Archivos de referencia:**
+- `src/services/errorService.js`
+**Dependencias:** Subtarea 9.4
+**Beneficio esperado:** Mejor capacidad para diagnosticar y resolver problemas.
+
+### Subtarea 9.9: Documentación del sistema de manejo de errores
+**Descripción:** Documentar el nuevo sistema de manejo de errores y cómo debe utilizarse.
+**Archivos a modificar o crear:**
+- Comentarios en archivos relevantes
+- Posible archivo dedicado a manejo de errores
+**Archivos de referencia:**
+- `src/services/errorService.js`
+- `src/errors/index.js`
+**Dependencias:** Subtareas anteriores de manejo de errores
+**Beneficio esperado:** Facilitar la comprensión y uso correcto del nuevo sistema.
+
+## 📌 TAREA 10: Documentación Completa del Proyecto
+
+**Descripción:** Desarrollar documentación exhaustiva del proyecto, incluyendo arquitectura, convenciones, flujos de trabajo y guías para desarrolladores.
+
+**Beneficio esperado:** Facilitar la incorporación de nuevos desarrolladores, mantener la consistencia en el desarrollo, y preservar el conocimiento sobre decisiones de diseño.
+
+### Subtarea 10.1: Documentación de la arquitectura general
+**Descripción:** Crear documentación que describa la arquitectura general del sistema, patrones utilizados y organización del código.
+**Archivos a modificar o crear:**
+- `docs/architecture.md` (Crear)
+**Archivos de referencia:**
+- Estructura general del proyecto
+**Dependencias:** Ninguna específica, pero idealmente después de otras mejoras
+**Beneficio esperado:** Visión clara de la arquitectura del sistema para nuevos desarrolladores.
+
+### Subtarea 10.2: Documentación de componentes
+**Descripción:** Documentar los componentes principales, su propósito, propiedades y eventos.
+**Archivos a modificar o crear:**
+- `docs/components.md` (Crear)
+**Archivos de referencia:**
+- Componentes existentes
+**Dependencias:** Ninguna
+**Beneficio esperado:** Facilitar la comprensión y uso correcto de los componentes.
+
+### Subtarea 10.3: Documentación de composables
+**Descripción:** Documentar los composables, su propósito, API, y ejemplos de uso.
+**Archivos a modificar o crear:**
+- `docs/composables.md` (Crear)
+**Archivos de referencia:**
+- Composables existentes
+**Dependencias:** Ninguna
+**Beneficio esperado:** Facilitar la comprensión y uso correcto de los composables.
+
+### Subtarea 10.4: Documentación de servicios
+**Descripción:** Documentar los servicios, su propósito, API, y ejemplos de uso.
+**Archivos a modificar o crear:**
+- `docs/services.md` (Crear)
+**Archivos de referencia:**
+- Servicios existentes
+**Dependencias:** Ninguna
+**Beneficio esperado:** Facilitar la comprensión y uso correcto de los servicios.
+
+### Subtarea 10.5: Documentación de stores
+**Descripción:** Documentar los stores, su estructura, getters, actions, y ejemplos de uso.
+**Archivos a modificar o crear:**
+- `docs/stores.md` (Crear)
+**Archivos de referencia:**
+- Stores existentes
+**Dependencias:** Ninguna
+**Beneficio esperado:** Facilitar la comprensión y uso correcto de los stores.
+
+### Subtarea 10.6: Creación de guía de estilo y convenciones
+**Descripción:** Documentar las convenciones de código, patrones recomendados, y guías de estilo para el proyecto.
+**Archivos a modificar o crear:**
+- `docs/style-guide.md` (Crear)
+**Archivos de referencia:**
+- Código existente que sigue buenas prácticas
+**Dependencias:** Ninguna
+**Beneficio esperado:** Mantener la consistencia en el código y facilitar el desarrollo colaborativo.
+
+### Subtarea 10.7: Documentación de flujos principales
+**Descripción:** Documentar los flujos principales de la aplicación, como el procesamiento de video y la gestión de errores.
+**Archivos a modificar o crear:**
+- `docs/workflows.md` (Crear)
+**Archivos de referencia:**
+- Código que implementa estos flujos
+**Dependencias:** Ninguna
+**Beneficio esperado:** Comprensión clara de los procesos clave de la aplicación.
+
+### Subtarea 10.8: Creación de README completo
+**Descripción:** Desarrollar un README completo que sirva como punto de entrada a la documentación y al proyecto.
+**Archivos a modificar o crear:**
+- README.md (Modificar)
+**Archivos de referencia:**
+- Documentación creada en subtareas anteriores
+**Dependencias:** Subtareas 10.1 a 10.7
+**Beneficio esperado:** Ofrecer una visión general del proyecto y acceso rápido a la documentación detallada.
+
+### Subtarea 10.9: Documentación de procesos de desarrollo
+**Descripción:** Documentar los procesos de desarrollo, como configuración del entorno, pruebas, y despliegue.
+**Archivos a modificar o crear:**
+- `docs/development.md` (Crear)
+**Archivos de referencia:**
+- Configuración actual de desarrollo
+**Dependencias:** Ninguna
+**Beneficio esperado:** Facilitar la incorporación de nuevos desarrolladores y mantener la consistencia en los procesos.
+
+### Subtarea 10.10: Generación de diagrama de arquitectura
+**Descripción:** Crear diagramas visuales que ilustren la arquitectura y los flujos principales del sistema.
+**Archivos a modificar o crear:**
+- `docs/images/` (Directorio a crear)
+- Archivos de imagen para diagramas
+**Archivos de referencia:**
+- Documentación escrita en subtareas anteriores
+**Dependencias:** Subtareas 10.1, 10.7
+**Beneficio esperado:** Facilitar la comprensión visual de la arquitectura y los procesos del sistema.
