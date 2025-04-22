@@ -1,17 +1,13 @@
 <template>
-  <div class="video-container">
-    <img :src="streamUrl" :alt="altText" class="video-stream rounded img-fluid" 
-         v-if="isActive && !isLoading" @error="onStreamError">
-    <div v-else-if="isLoading" class="video-loading">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Cargando...</span>
-      </div>
-      <p class="mt-2">Cargando video...</p>
-    </div>
-    <div v-else class="video-placeholder">
-      {{ placeholderText }}
-    </div>
-  </div>
+  <VideoDisplay 
+    :stream-type="streamType"
+    :is-active="isActive"
+    :is-loading="isLoading"
+    :stream-url="streamUrl"
+    :placeholder-text="placeholderText"
+    :alt-text="altText"
+    @stream-error="onStreamError"
+  />
 </template>
 
 <script setup>
@@ -19,6 +15,7 @@ import { watch, computed } from 'vue'
 import { useVideoStream } from '@/composables/useVideoStream'
 import { useVideoStore } from '@/stores/videoStore'
 import { storeToRefs } from 'pinia'
+import VideoDisplay from '@/components/presentational/VideoDisplay.vue'
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
@@ -37,6 +34,9 @@ const props = defineProps({
   }
 })
 
+// eslint-disable-next-line no-undef
+const emit = defineEmits(['stream-error'])
+
 const videoStore = useVideoStore()
 const { streamStates } = storeToRefs(videoStore)
 const isLoading = computed(() => streamStates.value[props.streamType].loading)
@@ -46,8 +46,19 @@ const {
   altText,
   startStream,
   stopStream,
-  onStreamError
+  onStreamError: handleStreamError
 } = useVideoStream(props.streamType)
+
+function onStreamError(errorDetails) {
+  // Utilizamos la información detallada del error para el manejo interno
+  handleStreamError({
+    type: props.streamType,
+    details: errorDetails
+  })
+  
+  // Propagamos el error hacia arriba con el tipo de stream
+  emit('stream-error', props.streamType, errorDetails)
+}
 
 // Sincronizar el estado isActive del composable con la prop
 watch(() => props.isActive, (newValue) => {
@@ -58,44 +69,3 @@ watch(() => props.isActive, (newValue) => {
   }
 }, { immediate: true })
 </script>
-
-<style scoped>
-.video-container {
-  width: 100%;
-  overflow: hidden;
-}
-
-.video-stream {
-  width: 100%;
-  border: 1px solid #ddd;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  max-height: 500px;
-  object-fit: contain;
-}
-
-.video-placeholder, .video-loading {
-  background-color: #f8f9fa;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  color: #6c757d;
-  min-height: 200px;
-  width: 100%;
-  border: 1px solid #dee2e6;
-  border-radius: 0.25rem;
-}
-
-/* Responsive adjustments */
-@media (max-width: 767.98px) {
-  .video-placeholder, .video-loading {
-    min-height: 150px;
-  }
-}
-
-@media (max-width: 575.98px) {
-  .video-placeholder, .video-loading {
-    min-height: 120px;
-  }
-}
-</style>

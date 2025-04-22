@@ -10,22 +10,44 @@ export function useErrorHandling() {
   const videoStore = useVideoStore()
 
   function handleError(error, title = 'Error') {
+    let errorMessage;
+    
+    // Determinar el mensaje de error según el formato
+    if (error && typeof error === 'object') {
+      if (error.message) {
+        // Formato de error estándar de JavaScript
+        errorMessage = error.message;
+      } else if (error.details && error.details.message) {
+        // Nuevo formato detallado que creamos en VideoDisplay
+        errorMessage = error.details.message;
+      } else {
+        // Fallback para otros formatos de error
+        errorMessage = JSON.stringify(error);
+      }
+    } else {
+      // Si error es un string u otro tipo primitivo
+      errorMessage = String(error);
+    }
+    
     notificationStore.notify({
       type: 'error',
       title: title,
-      text: error.message || error
+      text: errorMessage
     })
   }
 
   function handleStreamError(streamType, error) {
+    // Si recibimos un objeto con propiedad 'type', usamos ese valor
+    const actualStreamType = error && error.type ? error.type : streamType;
+    
     // Stop the stream in the store when an error occurs
-    if (streamType === 'original') {
+    if (actualStreamType === 'original') {
       videoStore.stopOriginal()
     } else {
       videoStore.stopProcessed()
     }
     
-    handleError(error, `Error en stream ${streamType}`)
+    handleError(error, `Error en stream ${actualStreamType}`)
   }
 
   function handleAutoStartError(error) {

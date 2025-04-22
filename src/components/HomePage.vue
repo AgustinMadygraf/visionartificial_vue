@@ -1,5 +1,23 @@
 <!--
 Path: src/components/HomePage.vue
+Componente: HomePage (Presentacional)
+
+DESCRIPCIÓN:
+Componente presentacional que muestra la interfaz principal de la aplicación con
+los streams de video original y procesado.
+
+PROPS:
+- originalActive: Boolean - Indica si el stream original está activo
+- processedActive: Boolean - Indica si el stream procesado está activo
+- isOriginalLoading: Boolean - Indica si el stream original está cargando
+- isProcessedLoading: Boolean - Indica si el stream procesado está cargando
+
+EVENTOS:
+- start-original: () => void - Emitido cuando se solicita iniciar el video original
+- stop-original: () => void - Emitido cuando se solicita detener el video original
+- start-processed: () => void - Emitido cuando se solicita iniciar el video procesado
+- stop-processed: () => void - Emitido cuando se solicita detener el video procesado
+- stream-error: (streamType: string, error: Error) => void - Emitido cuando ocurre un error en algún stream
 -->
 
 <template>
@@ -14,8 +32,9 @@ Path: src/components/HomePage.vue
           <div class="card-body">
             <VideoControls 
               :is-active="originalActive" 
-              @start="startOriginal" 
-              @stop="stopOriginal"
+              :is-loading="isOriginalLoading"
+              @start="$emit('start-original')" 
+              @stop="$emit('stop-original')"
               stream-type="original"
               class="mb-3"
             />
@@ -23,7 +42,7 @@ Path: src/components/HomePage.vue
               stream-type="original" 
               :is-active="originalActive" 
               placeholder-text="Video Original Detenido"
-              @stream-error="handleStreamError"
+              @stream-error="(streamType, error) => $emit('stream-error', streamType, error)"
               class="img-fluid w-100"
             />
           </div>
@@ -36,9 +55,10 @@ Path: src/components/HomePage.vue
           </div>
           <div class="card-body">
             <VideoControls 
-              :is-active="processedActive" 
-              @start="startProcessed" 
-              @stop="stopProcessed"
+              :is-active="processedActive"
+              :is-loading="isProcessedLoading" 
+              @start="$emit('start-processed')" 
+              @stop="$emit('stop-processed')"
               stream-type="processed"
               class="mb-3"
             />
@@ -46,7 +66,7 @@ Path: src/components/HomePage.vue
               stream-type="processed" 
               :is-active="processedActive" 
               placeholder-text="Video Procesado Detenido"
-              @stream-error="handleStreamError"
+              @stream-error="(streamType, error) => $emit('stream-error', streamType, error)"
               class="img-fluid w-100"
             />
           </div>
@@ -57,30 +77,28 @@ Path: src/components/HomePage.vue
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
 import VideoStream from '@/components/VideoStream.vue'
 import VideoControls from '@/components/VideoControls.vue'
-import { useVideoState } from '@/composables/useVideoState'
-import { useErrorHandling } from '@/composables/useErrorHandling'
 
 // eslint-disable-next-line no-undef
 defineOptions({ name: 'HomePage' })
 
-const { 
-  originalActive, 
-  processedActive, 
-  startOriginal, 
-  stopOriginal, 
-  startProcessed, 
-  stopProcessed 
-} = useVideoState()
-
-const { handleStreamError } = useErrorHandling()
-
-// Auto-start original video stream when component mounts
-onMounted(() => {
-  startOriginal()
+// eslint-disable-next-line no-undef
+defineProps({
+  originalActive: Boolean,
+  processedActive: Boolean,
+  isOriginalLoading: Boolean,
+  isProcessedLoading: Boolean
 })
+
+// eslint-disable-next-line no-undef
+defineEmits([
+  'start-original', 
+  'stop-original', 
+  'start-processed', 
+  'stop-processed', 
+  'stream-error'
+])
 </script>
 
 <style scoped>

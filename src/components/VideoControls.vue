@@ -1,43 +1,19 @@
 <template>
-  <div class="video-controls">
-    <div class="btn-group d-flex flex-wrap mb-2" role="group" aria-label="Video controls">
-      <button 
-        class="btn btn-success me-2 mb-2" 
-        @click="onStart" 
-        :disabled="props.isActive || props.isLoading"
-      >
-        <span v-if="props.isLoading">
-          <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-          Iniciando...
-        </span>
-        <span v-else>
-          <i class="bi bi-play-fill"></i> Iniciar
-        </span>
-      </button>
-      <button 
-        class="btn btn-danger mb-2" 
-        @click="onStop" 
-        :disabled="!props.isActive || props.isLoading"
-      >
-        <i class="bi bi-stop-fill"></i> Detener
-      </button>
-    </div>
-    <div v-if="statusMessage" 
-         class="alert p-2 mb-0" 
-         :class="{
-           'alert-danger': messageType === 'error',
-           'alert-info': messageType === 'info',
-           'alert-success': messageType === 'success'
-         }">
-      <small>{{ statusMessage }}</small>
-    </div>
-  </div>
+  <VideoControlsPresentation 
+    :is-active="isActive"
+    :is-loading="isLoading"
+    :status-message="statusMessage"
+    :message-type="messageType"
+    @start="onStart"
+    @stop="onStop"
+  />
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { useVideoStore } from '@/stores/videoStore'
 import { storeToRefs } from 'pinia'
+import VideoControlsPresentation from '@/components/presentational/VideoControls.vue'
 
 // eslint-disable-next-line no-undef
 const props = defineProps({

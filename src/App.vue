@@ -27,7 +27,7 @@ Path: src/App.vue
     
     <main class="py-4">
       <div class="container">
-        <HomePage />
+        <HomeContainer />
       </div>
     </main>
     
@@ -43,7 +43,7 @@ Path: src/App.vue
 </template>
 
 <script setup>
-import HomePage from './components/HomePage.vue';
+import HomeContainer from './containers/HomeContainer.vue';
 import NotificationsContainer from './components/NotificationsContainer.vue';
 </script>
 
